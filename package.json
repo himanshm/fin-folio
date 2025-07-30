@@ -1,0 +1,20 @@
+{
+  "name": "fin-folio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:cashdash": "pnpm --filter cashdash dev",
+    "dev:cashhub": "pnpm --filter cashhub dev"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.1",
+    "mime-types": "^3.0.1",
+    "prettier": "^3.6.2"
+  }
+}
