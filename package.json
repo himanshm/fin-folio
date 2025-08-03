@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev:cashdash": "pnpm --filter cashdash dev",
-    "dev:cashhub": "pnpm --filter cashhub dev"
+    "start:cashcore": "pnpm --filter cashcore start",
+    "migrate:db": "pnpm --filter cashcore db:migrate",
+    "create:db": "pnpm --filter cashcore db:create"
   },
   "workspaces": [
     "apps/*",

@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "outDir": "dist",
+    "sourceMap": true,
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types"],
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "noImplicitThis": true,
+    "pretty": true
+  },
+  "include": ["src/**/*", "eslint.config.js"],
+  "exclude": ["node_modules", "build", "dist"]
+}
