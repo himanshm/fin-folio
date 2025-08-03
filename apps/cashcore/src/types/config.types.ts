@@ -17,16 +17,16 @@ export interface DBConfig {
     min: number;
     idle: number;
     acquire: number;
-  }
+  };
   app?: {
     auth: {
       token: string;
       domain: string;
       jwtSecret: string;
-    }
+    };
     url: string;
     port: number | string;
-  }
+  };
 }
 
 export interface Config {

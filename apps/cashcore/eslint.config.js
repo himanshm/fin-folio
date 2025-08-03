@@ -1,41 +1,39 @@
 import js from '@eslint/js';
-import stylisticJs from '@stylistic/eslint-plugin-js';
+import stylisticJs from '@stylistic/eslint-plugin';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
-import googleConfig from 'eslint-config-google';
 import globals from 'globals';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   js.configs.recommended,
-  googleConfig,
   {
-    'files': ['**/*.{js,mjs,cjs,ts,tsx}'],
-    'languageOptions': {
-      'parser': tsParser,
-      'ecmaVersion': 2020,
-      'sourceType': 'module',
-      'globals': {
+    files: ['**/*.{js,mjs,cjs,ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      globals: {
         ...globals.node,
         NodeJS: true,
       },
-      'parserOptions': {
-        'parser': './tsconfig.json',
+      parserOptions: {
+        parser: './tsconfig.json',
       },
     },
 
-    'settings': {
+    settings: {
       'import/resolver': {
         node: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
       },
     },
-    'plugins': {
+    plugins: {
       '@typescript-eslint': tseslint,
       '@stylistic/js': stylisticJs,
     },
-    'rules': {
+    rules: {
       'object-curly-spacing': 'off',
       'valid-jsdoc': 'off',
       'max-len': 'off',
@@ -50,8 +48,20 @@ export default [
       '@typescript-eslint/ban-types': 'off',
       'func-names': ['error', 'never'],
       'arrow-parens': ['error', 'as-needed'],
-      'no-fallthrough': ['error', { 'allowEmptyCase': true }],
-      'new-cap': ['error', { 'capIsNew': false }],
+      'no-fallthrough': ['error', { allowEmptyCase: true }],
+      'new-cap': ['error', { capIsNew: false }],
+      'no-unused-vars': 'off',
+      // Allow unused vars in type signatures
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+        },
+      ],
       'no-underscore-dangle': [
         'error',
         {
@@ -65,5 +75,8 @@ export default [
     rules: {
       '@typescript-eslint/explicit-function-return-type': ['error'],
     },
+  },
+  {
+    ignores: ['node_modules/', 'dist/', 'build/'],
   },
 ];

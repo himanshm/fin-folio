@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import type { DBConfig, Config } from 'types/config.ts';
+import type { DBConfig, Config } from 'types/config.types.ts';
 
 const config: Config = {
   development: {
