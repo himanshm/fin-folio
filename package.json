@@ -5,6 +5,9 @@
   "scripts": {
     "dev:cashdash": "pnpm --filter cashdash dev",
     "start:cashcore": "pnpm --filter cashcore start",
+    "dev:cashcore": "pnpm --filter cashcore dev",
+    "pm2:cashcore:dev": "PM2_ENV=development pm2 start apps/cashcore/ecosystem.config.cjs",
+    "pm2:cashcore:prod": "pnpm --filter cashcore build && PM2_ENV=production pm2 start apps/cashcore/ecosystem.config.cjs",
     "lint": "eslint --config packages/eslint-config/index.js --ext .js,.jsx,.ts,.tsx",
     "lint:cashcore": "eslint --config packages/eslint-config/index.js --ext .ts,.js --fix",
     "lint:cashdash": "eslint --config packages/eslint-config/index.js --ext .ts,.tsx,.js,.jsx --fix",
@@ -24,6 +27,9 @@
     "prettier": "^3.6.2"
   },
   "devDependencies": {
-    "eslint": "^9.36.0"
+    "@types/node": "^24.1.0",
+    "eslint": "^9.36.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
   }
 }

@@ -77,6 +77,7 @@ const baseConfig = defineConfig([
           semi: true,
           singleQuote: true,
           trailingComma: 'none',
+          tabwidth: 2
         },
       ],
       // import rules

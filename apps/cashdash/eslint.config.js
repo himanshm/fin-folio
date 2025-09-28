@@ -1,6 +1,5 @@
 import baseConfig from '@fin-folio/config';
 import { defineConfig } from 'eslint/config';
-console.log(baseConfig);
 
 export default defineConfig([
   ...baseConfig,

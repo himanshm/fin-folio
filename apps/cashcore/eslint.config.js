@@ -6,6 +6,12 @@ export default defineConfig([
   {
     rules: {
       '@stylistic/indent': ['error', 4],
+      'prettier/prettier': [
+        'error',
+        {
+          tabWidth: 4,
+        },
+      ],
       '@typescript-eslint/explicit-function-return-type': ['error'],
     },
   },
