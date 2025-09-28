@@ -1,8 +1,8 @@
-import { env as _env } from 'process';
-import winston from 'winston';
 import { getConfig } from 'config.ts';
+import { env as _env } from 'process';
 import type { Config } from 'types/config.types.ts';
 import type { CustomRequest, Logger } from 'types/logger.types.ts';
+import winston from 'winston';
 
 const env = (_env.NODE_ENV || 'development') as keyof Config;
 const config = getConfig(env);
@@ -26,17 +26,17 @@ const winstonLogger = winston.createLogger({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
-      ),
+      )
     }),
     new winston.transports.Console({
       level: 'debug',
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
-      ),
-    }),
+      )
+    })
   ],
-  exitOnError: false,
+  exitOnError: false
 });
 
 const logger: Logger = {
@@ -74,12 +74,12 @@ const logger: Logger = {
         sessionId,
         userId,
         client,
-        requestBody: { ...body },
+        requestBody: { ...body }
       };
 
       winstonLogger.info(logDetails);
-    },
-  },
+    }
+  }
 };
 
 export default logger;

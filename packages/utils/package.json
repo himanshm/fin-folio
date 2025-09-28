@@ -1,0 +1,14 @@
+{
+  "name": "@fin-folio/utils",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "nanoid": "^5.1.5"
+  }
+}

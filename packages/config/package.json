@@ -1,0 +1,15 @@
+{
+  "name": "@fin-folio/config",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@fin-folio/utils": "workspace:*",
+    "clsx": "^2.1.1"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/cashcore" },
+    { "path": "./apps/cashdash" },
+    { "path": "./packages/config" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/eslint-config" }
+  ]
+}
