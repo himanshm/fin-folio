@@ -27,6 +27,9 @@ importers:
 
   apps/cashcore:
     dependencies:
+      '@fin-folio/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       axios:
         specifier: ^1.11.0
         version: 1.11.0
@@ -94,6 +97,9 @@ importers:
 
   apps/cashdash:
     dependencies:
+      '@fin-folio/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       react:
         specifier: ^19.1.0
         version: 19.1.1
@@ -119,6 +125,9 @@ importers:
 
   packages/config:
     dependencies:
+      '@fin-folio/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@fin-folio/utils':
         specifier: workspace:*
         version: link:../utils

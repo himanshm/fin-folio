@@ -11,7 +11,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 
-export default defineConfig([
+const baseConfig = defineConfig([
   js.configs.recommended,
 
   // --- TypeScript files ---
@@ -46,37 +46,18 @@ export default defineConfig([
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
       },
+      react: {
+        version: 'detect',
+      },
     },
     rules: {
-      // ===== From frontend config =====
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-
-      'prettier/prettier': [
-        'warn',
-        {
-          arrowParens: 'avoid',
-          printWidth: 80,
-          semi: true,
-          singleQuote: true,
-          trailingComma: 'none',
-        },
-      ],
-
-      // ===== From backend config =====
-      'object-curly-spacing': 'off',
-      'valid-jsdoc': 'off',
-      'max-len': 'off',
-      'require-jsdoc': 'off',
-      'import/no-cycle': 'off',
-      'no-param-reassign': 'off',
-      'no-shadow': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
+      'no-unused-vars': 'off',
+      // stylistic
+      '@stylistic/indent': ['error', 2],
+      '@stylistic/semi': ['error', 'always'],
+      '@stylistic/arrow-parens': ['error', 'as-needed'],
       '@stylistic/object-curly-spacing': ['error', 'always'],
-      '@typescript-eslint/ban-types': 'off',
-      'func-names': ['error', 'never'],
-      'arrow-parens': ['error', 'as-needed'],
-      'no-fallthrough': ['error', { allowEmptyCase: true }],
-      'new-cap': ['error', { capIsNew: false }],
+      // TypeScript
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -87,6 +68,22 @@ export default defineConfig([
           argsIgnorePattern: '^_',
         },
       ],
+      // Prettier
+      'prettier/prettier': [
+        'warn',
+        {
+          arrowParens: 'avoid',
+          printWidth: 80,
+          semi: true,
+          singleQuote: true,
+          trailingComma: 'none',
+        },
+      ],
+      // import rules
+      'import/no-duplicates': 'error',
+
+      // react accessibility
+      'jsx-a11y/accessible-emoji': 'warn',
       'no-underscore-dangle': [
         'error',
         {
@@ -119,24 +116,15 @@ export default defineConfig([
       'prettier/prettier': 'warn',
     },
   },
-  // --- Shared rules for all files ---
-  {
-    rules: {
-      '@stylistic/indent': ['error', 2], // default everywhere
-      '@stylistic/arrow-parens': ['error', 'as-needed'],
-      '@stylistic/semi': ['error', 'always'],
-      '@stylistic/object-curly-spacing': ['error', 'always'],
-      'import/no-duplicates': 'error',
-    },
-  },
-
   // --- Ignores ---
   {
     ignores: [
-      '**/node_modules',
-      '**/dist',
-      '**/build',
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
       'apps/**/ecosystem.config.js',
     ],
   },
 ]);
+
+export default baseConfig;
