@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@fin-folio/utils": "workspace:*",
-    "@fin-folio/eslint-config": "workspace:*",
-    "clsx": "^2.1.1"
+    "@fin-folio/eslint-config": "workspace:*"
   }
 }

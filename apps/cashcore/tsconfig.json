@@ -1,13 +1,14 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "composite": true,
     "baseUrl": "./src",
     "outDir": "dist",
     "sourceMap": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "declaration": true,
+    "declarationMap": true,
+    "types": ["node"],
     "noUnusedLocals": false,
-    "noImplicitThis": true,
     "pretty": true
   },
   "include": ["src/**/*", "eslint.config.js"],

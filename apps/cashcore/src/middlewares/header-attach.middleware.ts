@@ -8,37 +8,37 @@ import { v4 as uuidv4 } from 'uuid';
  */
 
 export const attachRequestId = (
-    req: CustomRequest,
-    res: Response,
-    next: NextFunction
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
 ): void => {
-    req.sessionId =
-        (Array.isArray(req.headers['x-session-id'])
-            ? req.headers['x-session-id'][0]
-            : req.headers['x-session-id']) || uuidv4();
+  req.sessionId =
+    (Array.isArray(req.headers['x-session-id'])
+      ? req.headers['x-session-id'][0]
+      : req.headers['x-session-id']) || uuidv4();
 
-    res.setHeader('x-session-id', req.sessionId);
-    next();
+  res.setHeader('x-session-id', req.sessionId);
+  next();
 };
 
 /**
  * Middleware to attach the application version to the request and response headers.
  */
 export const attachAppVersion = (
-    req: CustomRequest,
-    res: Response,
-    next: NextFunction
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const { version } = readJsonFile<{ version: string }>(
-        import.meta.url,
-        '../../package.json'
-    );
+  const { version } = readJsonFile<{ version: string }>(
+    import.meta.url,
+    '../../package.json'
+  );
 
-    req.appVersion =
-        (Array.isArray(req.headers['app-version'])
-            ? req.headers['app-version'][0]
-            : req.headers['app-version']) || version;
+  req.appVersion =
+    (Array.isArray(req.headers['app-version'])
+      ? req.headers['app-version'][0]
+      : req.headers['app-version']) || version;
 
-    res.setHeader('app-version', req.appVersion as string);
-    next();
+  res.setHeader('app-version', req.appVersion as string);
+  next();
 };

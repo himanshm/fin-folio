@@ -1,5 +1,5 @@
 // ecosystem.config.mjs
-const { env: _env } = require("process");
+const { env: _env } = require('process');
 
 const APPS = {
   CASHCORE: 'cashcore',
@@ -24,28 +24,30 @@ if (!ALLOWED_ENVS.includes(env)) {
 
 // Helpers
 const getScript = () => {
-  if (env === ENVS.PRODUCTION) return "./dist/server.js";
-  return "./src/server.ts";
+  if (env === ENVS.PRODUCTION) return './dist/server.js';
+  return './src/server.ts';
 };
 
 const getInterpreterArgs = () => {
-  if (env === ENVS.PRODUCTION) return "";
-  return "--import tsx";
+  if (env === ENVS.PRODUCTION) return '';
+  return '--import tsx';
 };
 
-const getNodeArgsForApp = (appName) => {
+const getNodeArgsForApp = () => {
   if (env === ENVS.PRODUCTION) return '--max_old_space_size=7500';
   if (env === ENVS.TEST) return '--max_old_space_size=4096';
   return '';
 };
 
-const getInstances = (appName) => {
-  if (appName === APPS.CASHCORE && [ENVS.PRODUCTION, ENVS.TEST].includes(env)) return 2;
+const getInstances = appName => {
+  if (appName === APPS.CASHCORE && [ENVS.PRODUCTION, ENVS.TEST].includes(env))
+    return 2;
   return 1;
 };
 
-const getExecMode = (appName) => {
-  if (appName === APPS.CASHCORE && [ENVS.PRODUCTION, ENVS.TEST].includes(env)) return 'cluster';
+const getExecMode = appName => {
+  if (appName === APPS.CASHCORE && [ENVS.PRODUCTION, ENVS.TEST].includes(env))
+    return 'cluster';
   return 'fork';
 };
 
@@ -58,7 +60,7 @@ module.exports = {
       cwd: __dirname,
       script: getScript(),
       interpreter: 'node',
-      interpreter_args: getInterpreterArgs(), 
+      interpreter_args: getInterpreterArgs(),
       exec_mode: getExecMode(APPS.CASHCORE),
       watch: shouldWatch(APPS.CASHCORE),
       instances: getInstances(APPS.CASHCORE),

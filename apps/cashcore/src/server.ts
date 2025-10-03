@@ -4,8 +4,8 @@ import { getConfig } from 'config.ts';
 import http from 'http';
 import logger from 'logger.ts';
 import {
-    handleServerError,
-    onServerListen,
+  handleServerError,
+  onServerListen
 } from 'middlewares/server.middlewares.ts';
 import { env as _env } from 'process';
 import type { Config } from './types/config.types.ts';
@@ -16,8 +16,8 @@ const config = getConfig(env);
 const port = normalisePort(String(_env.PORT ?? config.app?.port ?? 8081));
 
 if (port === false) {
-    logger.error('Invalid port specified');
-    process.exit(1);
+  logger.error('Invalid port specified');
+  process.exit(1);
 }
 
 app.set('port', port);
