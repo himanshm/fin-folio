@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev:cashdash": "pnpm --filter cashdash dev",
+    "dev": "pnpm --filter cashdash dev",
     "start:cashcore": "pnpm --filter cashcore start",
     "dev:cashcore": "pnpm --filter cashcore dev",
     "pm2:cashcore:dev": "PM2_ENV=development pm2 start apps/cashcore/ecosystem.config.cjs",
@@ -30,6 +30,17 @@
     "@types/node": "^24.1.0",
     "eslint": "^9.36.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "@eslint/js": "^9.32.0",
+    "@stylistic/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0"
   }
 }

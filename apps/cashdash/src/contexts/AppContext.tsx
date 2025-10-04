@@ -6,7 +6,7 @@ import {
   type ReactNode
 } from 'react';
 
-import type { Theme } from '@/lib/types';
+import type { Theme } from '@/types';
 
 type AppProviderProps = {
   children: ReactNode;

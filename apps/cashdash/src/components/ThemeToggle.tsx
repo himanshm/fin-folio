@@ -2,13 +2,13 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Monitor, Moon, Sun } from 'lucide-react';
 
 import { useTheme } from '@/contexts/AppContext';
-import type { Theme } from '@/lib/types';
+import type { Theme } from '@/types';
 import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import type { ElementType } from 'react';
 
@@ -16,23 +16,23 @@ const menuOptions: { label: string; value: Theme; icon: ElementType }[] = [
   {
     label: 'Light',
     value: 'light',
-    icon: Sun,
+    icon: Sun
   },
   {
     label: 'Dark',
     value: 'dark',
-    icon: Moon,
+    icon: Moon
   },
   {
     label: 'System',
     value: 'system',
-    icon: Monitor,
-  },
-]
+    icon: Monitor
+  }
+];
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,12 +42,15 @@ const ThemeToggle = () => {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className="w-40 p-2">
-        {menuOptions.map((option) => (
-          <DropdownMenuItem 
+      <DropdownMenuContent align="end" className="w-40 p-2">
+        {menuOptions.map(option => (
+          <DropdownMenuItem
             key={option.value}
             onClick={() => setTheme(option.value)}
-            className={cn("flex items-center gap-5 px-2 py-1.5 rounded-sm border-0", theme === option.value && 'bg-accent')}
+            className={cn(
+              'flex items-center gap-5 px-2 py-1.5',
+              theme === option.value && 'bg-accent'
+            )}
           >
             <option.icon className="h-4 w-4" />
             {option.label}
@@ -55,7 +58,7 @@ const ThemeToggle = () => {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
-export default ThemeToggle
+export default ThemeToggle;

@@ -9,7 +9,6 @@
     }
   },
   "dependencies": {
-    "@fin-folio/utils": "workspace:*",
-    "@fin-folio/eslint-config": "workspace:*"
+    "@fin-folio/utils": "workspace:*"
   }
 }

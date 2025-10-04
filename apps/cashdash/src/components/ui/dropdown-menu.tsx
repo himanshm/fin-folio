@@ -35,7 +35,6 @@ function DropdownMenuTrigger({
 
 DropdownMenuTrigger.displayName = DropdownMenuPrimitive.Trigger.displayName;
 
-
 function DropdownMenuContent({
   className,
   sideOffset = 4,
@@ -119,7 +118,8 @@ function DropdownMenuCheckboxItem({
   );
 }
 
-DropdownMenuCheckboxItem.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
+DropdownMenuCheckboxItem.displayName =
+  DropdownMenuPrimitive.CheckboxItem.displayName;
 
 function DropdownMenuRadioGroup({
   ...props
@@ -132,7 +132,8 @@ function DropdownMenuRadioGroup({
   );
 }
 
-DropdownMenuRadioGroup.displayName = DropdownMenuPrimitive.RadioGroup.displayName;
+DropdownMenuRadioGroup.displayName =
+  DropdownMenuPrimitive.RadioGroup.displayName;
 
 function DropdownMenuRadioItem({
   className,
@@ -213,7 +214,7 @@ function DropdownMenuShortcut({
   );
 }
 
-DropdownMenuShortcut.displayName = 'DropdownMenuShortcut'
+DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
 function DropdownMenuSub({
   ...props
@@ -247,7 +248,8 @@ function DropdownMenuSubTrigger({
   );
 }
 
-DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
+DropdownMenuSubTrigger.displayName =
+  DropdownMenuPrimitive.SubTrigger.displayName;
 
 function DropdownMenuSubContent({
   className,
@@ -265,14 +267,23 @@ function DropdownMenuSubContent({
   );
 }
 
-DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName;
+DropdownMenuSubContent.displayName =
+  DropdownMenuPrimitive.SubContent.displayName;
 
 export {
-  DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent,
-  DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger
 };
-
