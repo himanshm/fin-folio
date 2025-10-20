@@ -1,0 +1,99 @@
+import bcrypt from 'bcrypt';
+import {
+    AfterLoad,
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Unique
+} from 'typeorm';
+import { ValidationEntity } from './ValidationEntity';
+
+import {
+    EMAIL_VALIDATION_MESSAGE,
+    EMAIL_VALIDATION_REGEX,
+    PASSWORD_VALIDATION_MESSAGE,
+    PASSWORD_VALIDATION_REGEX,
+    getIsInvalidMessage
+} from '@/utils';
+import { IsEmail, IsOptional, Length, Matches } from 'class-validator';
+import { Budget } from './Budget';
+import { Category } from './Category';
+import { Transaction } from './Transaction';
+
+@Entity('Users')
+@Unique(['email', 'publicId'])
+export class User extends ValidationEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @PrimaryGeneratedColumn('uuid')
+  publicId: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  @Length(1, 100, { message: getIsInvalidMessage('Name') })
+  name: string;
+
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  @IsEmail(undefined, { message: getIsInvalidMessage('Email') })
+  @Matches(EMAIL_VALIDATION_REGEX, {
+    message: `${getIsInvalidMessage('Email')}. ${EMAIL_VALIDATION_MESSAGE}`
+  })
+  email: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  @Matches(PASSWORD_VALIDATION_REGEX, {
+    message: `${getIsInvalidMessage('Password')}. ${PASSWORD_VALIDATION_MESSAGE}`
+  })
+  password: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  @IsOptional()
+  avatarUrl: string;
+
+  @Column({ nullable: true, type: 'varchar' })
+  @IsOptional()
+  country: string;
+
+  @Column({ type: 'varchar', nullable: true, default: 'USD' })
+  @Length(3, 3, {
+    message: `${getIsInvalidMessage('Currency')}. Must be 3 characters long currency code.`
+  })
+  @IsOptional()
+  currency: string;
+
+  @OneToMany(() => Category, category => category.user)
+  categories: Category[];
+
+  @OneToMany(() => Budget, budget => budget.user)
+  budgets: Budget[];
+
+  @OneToMany(() => Transaction, transaction => transaction.user)
+  transactions: Transaction[];
+
+  // This property stores a cached password used to check
+  // if the password was changed during an update
+  cachedPassword: string;
+
+  @AfterLoad()
+  cachePassword() {
+    if (!this.password) {
+      this.cachedPassword = this.password;
+    }
+  }
+
+  @BeforeUpdate()
+  @BeforeInsert()
+  async hashPassword() {
+    if (!this.password) return;
+    if (this.cachedPassword === this.password) return;
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  async isPasswordValid(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
+  }
+}
