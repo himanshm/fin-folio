@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+  },
+  "include": ["packages/**/*", "apps/**/*"]
+}

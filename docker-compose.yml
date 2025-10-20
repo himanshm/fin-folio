@@ -1,0 +1,65 @@
+services:
+  backend-service:
+    build: 
+      context: apps/fin-folio-server
+      dockerfile: Dockerfile.dev
+    restart: always
+    depends_on:
+      - database
+    env_file: .env
+    environment:
+      - PORT=$BE_SERVICE_PORT
+      - PG_HOST=database # Hostname of .network (shared-network - docker virtual network)
+      - PG_PORT=$PG_PORT
+      - PG_USER=$PG_USER
+      - PG_PASSWORD=$PG_PASSWORD 
+      - PG_DB=$PG_DB
+      - JWT_SECRET=$JWT_SECRET // TODO: check if this is used
+    ports:
+      - ${BE_SERVICE_PORT}:${BE_SERVICE_PORT}
+    volumes:
+      - ./apps/fin-folio-server:/usr/app/
+      - /usr/app/node_modules
+    networks:
+      - shared-network
+    command: pnpm run dev
+
+  web-client:
+    build: 
+      context: apps/fin-folio-client
+      dockerfile: Dockerfile.dev
+    restart: always
+    env_file: .env
+    environment:
+      - PORT=$WEB_CLIENT_PORT
+    ports:
+      - ${WEB_CLIENT_PORT}:${WEB_CLIENT_PORT}
+    volumes:
+      - ./apps/fin-folio-client:/usr/app/
+      - /usr/app/node_modules
+    networks:
+      - shared-network
+    command: pnpm run dev
+
+  database:
+    image: postgres:17-alpine
+    restart: always
+    env_file: .env
+    environment:
+      POSTGRES_USER: $PG_USER 
+      POSTGRES_PASSWORD: $PG_PASSWORD
+      POSTGRES_DB: $PG_DB
+    ports:
+      - $PG_PORT:$PG_PORT
+    volumes:
+       - dbdata:/var/lib/postgresql/data
+    networks:
+      - shared-network
+    command: -p $PG_PORT
+
+networks:
+  shared-network:
+    driver: bridge
+
+volumes:
+  dbdata:
