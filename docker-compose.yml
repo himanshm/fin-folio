@@ -1,24 +1,26 @@
 services:
   backend-service:
     build: 
-      context: apps/fin-folio-server
+      context: .
       dockerfile: Dockerfile.dev
+      target: server
+    container_name: fin-folio-backend
     restart: always
     depends_on:
       - database
     env_file: .env
     environment:
-      - PORT=$BE_SERVICE_PORT
+      - PORT=${BE_SERVICE_PORT}
       - PG_HOST=database # Hostname of .network (shared-network - docker virtual network)
-      - PG_PORT=$PG_PORT
-      - PG_USER=$PG_USER
-      - PG_PASSWORD=$PG_PASSWORD 
-      - PG_DB=$PG_DB
-      - JWT_SECRET=$JWT_SECRET // TODO: check if this is used
+      - PG_PORT=${PG_PORT}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DB=${PG_DB}
+      # - JWT_SECRET=$JWT_SECRET // TODO: check if this is used
     ports:
       - ${BE_SERVICE_PORT}:${BE_SERVICE_PORT}
     volumes:
-      - ./apps/fin-folio-server:/usr/app/
+      - ./apps/fin-folio-server:/usr/app/apps/fin-folio-server
       - /usr/app/node_modules
     networks:
       - shared-network
@@ -26,36 +28,62 @@ services:
 
   web-client:
     build: 
-      context: apps/fin-folio-client
+      context: .
       dockerfile: Dockerfile.dev
+      target: client
+    container_name: fin-folio-client
     restart: always
     env_file: .env
     environment:
-      - PORT=$WEB_CLIENT_PORT
+      - PORT=${WEB_CLIENT_PORT}
     ports:
       - ${WEB_CLIENT_PORT}:${WEB_CLIENT_PORT}
     volumes:
-      - ./apps/fin-folio-client:/usr/app/
+      - ./apps/fin-folio-client:/usr/app/apps/fin-folio-client
       - /usr/app/node_modules
     networks:
       - shared-network
-    command: pnpm run dev
+    command: pnpm run dev -- --host
 
+  # ---------- DATABASE ----------
+  # Port Mapping:
+  # - 5433 (host) -> 5432 (container) - Postgres
+  # - Homebrew Postgres runs on 5432 (host) separately
+  # This prevents conflicts with Homebrew Postgres on port 5432
   database:
     image: postgres:17-alpine
+    container_name: fin-folio-database
     restart: always
     env_file: .env
     environment:
-      POSTGRES_USER: $PG_USER 
-      POSTGRES_PASSWORD: $PG_PASSWORD
-      POSTGRES_DB: $PG_DB
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
     ports:
-      - $PG_PORT:$PG_PORT
+      - ${DOCKER_PG_HOST_PORT}:${PG_PORT}
     volumes:
        - dbdata:/var/lib/postgresql/data
     networks:
       - shared-network
-    command: -p $PG_PORT
+    command: -p ${PG_PORT}
+
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   container_name: fin-folio-pgadmin
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+  #     PGADMIN_LISTEN_PORT: 80
+  #   ports:
+  #     - ${PGADMIN_PORT:-5050}:80
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin
+  #   networks:
+  #     - shared-network
+  #   depends_on:
+  #     - database
+  #   command: --server-port=80 --no-browser
 
 networks:
   shared-network:
@@ -63,3 +91,4 @@ networks:
 
 volumes:
   dbdata:
+  # pgadmin-data:

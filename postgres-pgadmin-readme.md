@@ -1,7 +1,3 @@
-# Fin-Folio
-
-A monorepo for personal finance tracker
-
 # PostgreSQL & PGAdmin Setup Guide
 
 ## Table of Contents
