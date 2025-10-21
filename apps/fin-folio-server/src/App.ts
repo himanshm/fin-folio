@@ -14,6 +14,9 @@ class Application {
     user.currency = 'GBP';
 
     try {
+      // const newUser = await AppDataSource.manager.save(user);
+      // console.log('New user: ', newUser);
+      // console.log('User created successfully');
       const lastUser = await AppDataSource.manager.findOneBy(User, {
         email: 'lauren-bell@noemail.com'
       });

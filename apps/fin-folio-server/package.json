@@ -19,7 +19,8 @@
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.3",
     "@types/node": "^24.9.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
