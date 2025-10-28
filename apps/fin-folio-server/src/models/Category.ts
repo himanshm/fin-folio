@@ -1,30 +1,30 @@
+import { CategoryOrigin, CategoryType } from '@/enums/CategoryType';
 import { getIsInvalidMessage } from '@/utils';
 import { IsDecimal, IsEnum, IsOptional, Length } from 'class-validator';
 import {
-    Column,
-    Entity,
-    ManyToOne,
-    OneToMany,
-    PrimaryGeneratedColumn
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique
 } from 'typeorm';
-import { CategoryBudget } from './CategoryBudget';
+import { BudgetItem } from './BudgetItem';
+import { Investment } from './Investment';
+import { Transaction } from './Transaction';
 import { User } from './User';
 import { ValidationEntity } from './ValidationEntity';
-
-export enum CategoryType {
-  INCOME = 0,
-  EXPENSE = 1,
-  SAVINGS = 2,
-  DEBT = 3
-}
-
 @Entity('Categories')
+@Unique(['publicId'])
 export class Category extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @PrimaryGeneratedColumn('uuid')
+  publicId: string;
+
   @Column({ type: 'enum', enum: CategoryType })
-  @IsEnum(CategoryType, { message: getIsInvalidMessage('Type') })
+  @IsEnum(CategoryType, { message: getIsInvalidMessage('Category Type') })
   type: CategoryType;
 
   @Column({ type: 'varchar' })
@@ -37,11 +37,21 @@ export class Category extends ValidationEntity {
     { message: getIsInvalidMessage('Accumulated Amount') }
   )
   @IsOptional()
-  accAmount: number;
+  accumulatedAmount: number;
+
+  @Column({ type: 'enum', enum: CategoryOrigin, default: CategoryOrigin.USER })
+  @IsEnum(CategoryOrigin, { message: getIsInvalidMessage('Category Origin')})
+  origin: CategoryOrigin;
 
   @ManyToOne(() => User, user => user.categories)
   user: User;
 
-  @OneToMany(() => CategoryBudget, categoryBudget => categoryBudget.category)
-  categoryBudgets: CategoryBudget[];
+  @OneToMany(() => BudgetItem, budgetItem => budgetItem.category)
+  budgetItems: BudgetItem[];
+
+  @OneToMany(() => Investment, investment => investment.category)
+  investments!: Investment[];
+
+  @OneToMany(() => Transaction, transaction => transaction.category)
+  transactions: Transaction[];
 }

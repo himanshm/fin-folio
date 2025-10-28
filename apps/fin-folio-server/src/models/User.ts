@@ -1,26 +1,27 @@
 import bcrypt from 'bcrypt';
 import {
-    AfterLoad,
-    BeforeInsert,
-    BeforeUpdate,
-    Column,
-    Entity,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    Unique
+  AfterLoad,
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique
 } from 'typeorm';
 import { ValidationEntity } from './ValidationEntity';
 
 import {
-    EMAIL_VALIDATION_MESSAGE,
-    EMAIL_VALIDATION_REGEX,
-    PASSWORD_VALIDATION_MESSAGE,
-    PASSWORD_VALIDATION_REGEX,
-    getIsInvalidMessage
+  EMAIL_VALIDATION_MESSAGE,
+  EMAIL_VALIDATION_REGEX,
+  PASSWORD_VALIDATION_MESSAGE,
+  PASSWORD_VALIDATION_REGEX,
+  getIsInvalidMessage
 } from '@/utils';
 import { IsEmail, IsOptional, Length, Matches } from 'class-validator';
 import { Budget } from './Budget';
 import { Category } from './Category';
+import { Investment } from './Investment';
 import { Transaction } from './Transaction';
 
 @Entity('Users')
@@ -72,6 +73,9 @@ export class User extends ValidationEntity {
 
   @OneToMany(() => Transaction, transaction => transaction.user)
   transactions: Transaction[];
+
+  @OneToMany(() => Investment, investment => investment.user)
+  investments: Investment[];
 
   // This property stores a cached password used to check
   // if the password was changed during an update
