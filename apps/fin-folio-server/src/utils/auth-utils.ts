@@ -1,4 +1,5 @@
 import config from "@/config";
+import { TokenPayload } from "@/types";
 import jwt from "jsonwebtoken";
 import { ConfigurationError } from "./custom-error";
 
@@ -14,16 +15,24 @@ if (!refreshTokenSecret) {
 }
 
 export const generateAccessToken = (
-  userId: string,
+  userId: string | number,
   options: jwt.SignOptions
 ) => {
   return jwt.sign({ userId }, accessTokenSecret, options);
 };
 
 export const generateRefreshToken = (
-  userId: string,
+  userId: string | number,
   tokenVersion: number,
   options: jwt.SignOptions
 ) => {
   return jwt.sign({ userId, tokenVersion }, refreshTokenSecret, options);
+};
+
+export const verifyRefreshToken = (token: string): TokenPayload | null => {
+  try {
+    return jwt.verify(token, refreshTokenSecret) as TokenPayload;
+  } catch (_error) {
+    return null;
+  }
 };

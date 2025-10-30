@@ -45,6 +45,10 @@ export class BaseRepository<T extends ObjectLiteral> {
     await this.repository.update(criteria, data);
   }
 
+  async updateById(id: number, data: Partial<T>): Promise<void> {
+    await this.repository.update(id, data);
+  }
+
   async delete(criteria: Partial<T>): Promise<void> {
     await this.repository.delete(criteria);
   }

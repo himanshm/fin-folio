@@ -8,6 +8,7 @@ export interface TokenPayload extends JwtPayload {
 
 export interface AppAuth {
   userId: string;
+  sessionId: string;
   ipAddress: string;
   deviceInfo: string;
 }

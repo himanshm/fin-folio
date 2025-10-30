@@ -1,6 +1,6 @@
 import { AppDataSource } from "@/data-source";
 import { User } from "@/models/User";
-import { DataSource, EntityManager } from "typeorm";
+import { DataSource, EntityManager, FindOneOptions } from "typeorm";
 import { BaseRepository } from "./base.repository";
 
 export class UserRepository extends BaseRepository<User> {
@@ -9,7 +9,7 @@ export class UserRepository extends BaseRepository<User> {
   }
 
   findOneByPublicIdForAuth(publicId: string): Promise<User | null> {
-    const filter = {
+    const filter: FindOneOptions<User> = {
       where: {
         publicId
       },
@@ -17,14 +17,14 @@ export class UserRepository extends BaseRepository<User> {
         id: true,
         publicId: true,
         email: true,
-        password: true
+        refreshTokenVersion: true
       }
     };
     return this.findOne(filter);
   }
 
   findOneByEmailForAuth(email: string): Promise<User | null> {
-    const filter = {
+    const filter: FindOneOptions<User> = {
       where: {
         email
       },
@@ -35,7 +35,8 @@ export class UserRepository extends BaseRepository<User> {
         email: true,
         password: true,
         refreshTokenVersion: true
-      }
+      },
+      relations: { sessions: true }
     };
     return this.findOne(filter);
   }

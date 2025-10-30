@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 import { ValidationEntity } from "./ValidationEntity";
@@ -27,4 +28,8 @@ export class UserSession extends ValidationEntity {
 
   @ManyToOne(() => User, user => user.sessions, { onDelete: "CASCADE" })
   user: User;
+
+  async isTokenValid(token: string): Promise<boolean> {
+    return await bcrypt.compare(token, this.tokenHash);
+  }
 }
