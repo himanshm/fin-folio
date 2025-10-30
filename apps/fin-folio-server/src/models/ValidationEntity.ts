@@ -1,5 +1,5 @@
-import { validateOrReject } from 'class-validator';
-import { BeforeInsert, BeforeUpdate } from 'typeorm';
+import { validateOrReject } from "class-validator";
+import { BeforeInsert, BeforeUpdate } from "typeorm";
 
 export abstract class ValidationEntity {
   @BeforeInsert()
