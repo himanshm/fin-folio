@@ -1,7 +1,12 @@
-import Application from './App';
+import Application from "./App";
+import { logger } from "./utils";
 // import { loadEnv } from './loadEnv';
 
 // loadEnv();
 
-const appInstance = new Application();
-appInstance.main();
+(async () => {
+  const appInstance = new Application();
+  await appInstance.init();
+  appInstance.start();
+  logger.info("🚀 Application started successfully!");
+})();
