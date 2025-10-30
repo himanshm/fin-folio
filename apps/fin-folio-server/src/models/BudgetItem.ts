@@ -1,5 +1,5 @@
-import { getIsInvalidMessage } from '@/utils';
-import { IsDecimal, IsOptional } from 'class-validator';
+import { getIsInvalidMessage } from "@/utils";
+import { IsDecimal, IsOptional } from "class-validator";
 import {
   Column,
   Entity,
@@ -7,30 +7,33 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Unique
-} from 'typeorm';
-import { Budget } from './Budget';
-import { Category } from './Category';
-import { Transaction } from './Transaction';
-import { ValidationEntity } from './ValidationEntity';
+} from "typeorm";
+import { Budget } from "./Budget";
+import { Category } from "./Category";
+import { Transaction } from "./Transaction";
+import { ValidationEntity } from "./ValidationEntity";
 
-@Entity('BudgetItems')
-@Unique(['publicId'])
+@Entity("BudgetItems")
+@Unique(["publicId"])
 export class BudgetItem extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   publicId: string;
 
-  @Column({ type: 'double precision' })
+  @Column({ type: "double precision" })
   @IsDecimal(
-    { decimal_digits: '2' },
-    { message: getIsInvalidMessage('Amount') }
+    { decimal_digits: "2" },
+    { message: getIsInvalidMessage("Amount") }
   )
   plannedAmount: number;
 
-  @Column('double precision', { nullable: true })
-  @IsDecimal({ decimal_digits: '2' }, { message: getIsInvalidMessage('Actual Amount') })
+  @Column("double precision", { nullable: true })
+  @IsDecimal(
+    { decimal_digits: "2" },
+    { message: getIsInvalidMessage("Actual Amount") }
+  )
   @IsOptional()
   actualAmount: number;
 

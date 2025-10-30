@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 import {
   AfterLoad,
   BeforeInsert,
@@ -8,8 +8,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Unique
-} from 'typeorm';
-import { ValidationEntity } from './ValidationEntity';
+} from "typeorm";
+import { ValidationEntity } from "./ValidationEntity";
 
 import {
   EMAIL_VALIDATION_MESSAGE,
@@ -17,53 +17,57 @@ import {
   PASSWORD_VALIDATION_MESSAGE,
   PASSWORD_VALIDATION_REGEX,
   getIsInvalidMessage
-} from '@/utils';
-import { IsEmail, IsOptional, Length, Matches } from 'class-validator';
-import { Budget } from './Budget';
-import { Category } from './Category';
-import { Investment } from './Investment';
-import { Transaction } from './Transaction';
+} from "@/utils";
+import { IsEmail, IsOptional, Length, Matches } from "class-validator";
+import { Budget } from "./Budget";
+import { Category } from "./Category";
+import { Investment } from "./Investment";
+import { Transaction } from "./Transaction";
+import { UserSession } from "./UserSession";
 
-@Entity('Users')
-@Unique(['email', 'publicId'])
+@Entity("Users")
+@Unique(["email", "publicId"])
 export class User extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   publicId: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  @Length(1, 100, { message: getIsInvalidMessage('Name') })
+  @Column({ type: "varchar", nullable: false })
+  @Length(1, 100, { message: getIsInvalidMessage("Name") })
   name: string;
 
-  @Column({ type: 'varchar', nullable: false, unique: true })
-  @IsEmail(undefined, { message: getIsInvalidMessage('Email') })
+  @Column({ type: "varchar", nullable: false, unique: true })
+  @IsEmail(undefined, { message: getIsInvalidMessage("Email") })
   @Matches(EMAIL_VALIDATION_REGEX, {
-    message: `${getIsInvalidMessage('Email')}. ${EMAIL_VALIDATION_MESSAGE}`
+    message: `${getIsInvalidMessage("Email")}. ${EMAIL_VALIDATION_MESSAGE}`
   })
   email: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   @Matches(PASSWORD_VALIDATION_REGEX, {
-    message: `${getIsInvalidMessage('Password')}. ${PASSWORD_VALIDATION_MESSAGE}`
+    message: `${getIsInvalidMessage("Password")}. ${PASSWORD_VALIDATION_MESSAGE}`
   })
   password: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   @IsOptional()
   avatarUrl: string;
 
-  @Column({ nullable: true, type: 'varchar' })
+  @Column({ nullable: true, type: "varchar" })
   @IsOptional()
   country: string;
 
-  @Column({ type: 'varchar', nullable: true, default: 'USD' })
+  @Column({ type: "varchar", nullable: true, default: "USD" })
   @Length(3, 3, {
-    message: `${getIsInvalidMessage('Currency')}. Must be 3 characters long currency code.`
+    message: `${getIsInvalidMessage("Currency")}. Must be 3 characters long currency code.`
   })
   @IsOptional()
   currency: string;
+
+  @Column({ type: "int", default: 0 })
+  refreshTokenVersion: number;
 
   @OneToMany(() => Category, category => category.user)
   categories: Category[];
@@ -76,6 +80,9 @@ export class User extends ValidationEntity {
 
   @OneToMany(() => Investment, investment => investment.user)
   investments: Investment[];
+
+  @OneToMany(() => UserSession, session => session.user)
+  sessions: UserSession[];
 
   // This property stores a cached password used to check
   // if the password was changed during an update
