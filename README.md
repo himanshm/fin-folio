@@ -518,3 +518,48 @@ docker exec -it fin-folio-database psql -U proxima -d nebula -c "SELECT version(
 - Backend service uses port **5432** (internal Docker network)
 - Keep `.env` file secure and never commit it to version control
 - Regular backups recommended for production databases
+
+---
+
+## Docker Dev vs Prod Guide (Node.js Monorepo)
+
+### Local Development
+
+- Goal: fast feedback when adding new packages.
+- Do not mount an anonymous volume over `/usr/app/node_modules`.
+- Start services with install-on-start to pick up new deps from the lockfile:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+- Updated compose commands (dev):
+  - Backend: `sh -c "pnpm install --frozen-lockfile && pnpm run dev"`
+  - Web: `sh -c "pnpm install --frozen-lockfile && pnpm run dev -- --host"`
+
+Why: previously an anonymous volume at `/usr/app/node_modules` masked the image's installed dependencies, causing "Cannot find module ..." after adding packages. Removing that mount and installing on container start fixes it while keeping determinism via the lockfile.
+
+### CI/Staging/Production
+
+- Goal: immutable, reproducible images.
+- Install dependencies at build time in the Dockerfile; do not run `pnpm install` at container start.
+- Do not mount source or `node_modules` in containers.
+- Run the built app only (e.g. `CMD ["node", "dist/server.js"]` or `pnpm start`).
+
+On dependency changes, rebuild images and replace containers:
+
+```bash
+docker compose up --build -V
+```
+
+Notes:
+
+- `--build` ensures images are rebuilt from the Dockerfile (deps baked in).
+- `-V` removes old anonymous volumes so stale `node_modules` cannot mask image contents.
+- Keep dev and prod behaviors in separate compose files (e.g., `docker-compose.yml` + `docker-compose.dev.yml` override).
+
+### Quick Decision
+
+- Development: use install-on-start in compose for faster iteration.
+- Production/CI: use image-only installs; rebuild with `--build -V` when deps change.

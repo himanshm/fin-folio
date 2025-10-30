@@ -1,62 +1,61 @@
 import js from "@eslint/js";
 import importPlugin from "eslint-plugin-import";
-import prettier from "eslint-plugin-prettier";
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import { defineConfig } from "eslint/config";
+import prettierPlugin from "eslint-plugin-prettier";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import reactRefreshPlugin from "eslint-plugin-react-refresh";
+import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,tsx,jsx}"],
     plugins: {
-      js,
-      prettier,
       import: importPlugin,
-     },
-    extends: [
-      "js/recommended",
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
+      prettier: prettierPlugin,
+      "react-hooks": reactHooksPlugin,
+      "react-refresh": reactRefreshPlugin
+    },
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node
       },
       parserOptions: {
-        ecmaVersion: 'latest',
+        ecmaVersion: "latest",
         ecmaFeatures: { jsx: true },
-        sourceType: 'module'
+        sourceType: "module"
       }
     },
     rules: {
-      'no-unused-vars': 'off',
+      ...reactHooksPlugin.configs["recommended-latest"].rules,
+      ...reactRefreshPlugin.configs.vite.rules,
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
-          "error",
-          {
-              args: "none",
-              vars: "all",
-              varsIgnorePattern: "^_",
-              argsIgnorePattern: "^_",
-              caughtErrors: "none",
-          },
-        ],
-      'import/no-duplicates': 'error',
-      'prettier/prettier': [
-        'warn',
+        "error",
         {
-          arrowParens: 'avoid',
+          args: "none",
+          vars: "all",
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          caughtErrors: "none"
+        }
+      ],
+      "import/no-duplicates": "error",
+      "prettier/prettier": [
+        "warn",
+        {
+          arrowParens: "avoid",
           printWidth: 80,
           semi: true,
-          trailingComma: 'none',
+          trailingComma: "none",
           useTabs: false,
           tabWidth: 2
         }
       ]
     }
-  },
+  }
 ]);
