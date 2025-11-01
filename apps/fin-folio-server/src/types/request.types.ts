@@ -1,4 +1,4 @@
-import type { Request } from "express";
+import "express";
 import type { JwtPayload } from "jsonwebtoken";
 
 export interface TokenPayload extends JwtPayload {
@@ -13,6 +13,8 @@ export interface AppAuth {
   deviceInfo: string;
 }
 
-export interface CustomRequest extends Request {
-  appAuth?: AppAuth;
+declare module "express" {
+  interface Request {
+    appAuth?: AppAuth;
+  }
 }

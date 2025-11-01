@@ -26,6 +26,16 @@ A monorepo for personal finance tracker
   - [Enums](#enums)
   - [Entity Relationships](#entity-relationships)
   - [Database Schema Diagram](#database-schema-diagram)
+- [Service Architecture & Transaction Handling](#service-architecture--transaction-handling)
+  - [Overview](#overview-1)
+  - [Singleton Services Pattern](#singleton-services-pattern)
+  - [Transaction Logic](#transaction-logic)
+  - [How It Works](#how-it-works)
+  - [Visual Flow](#visual-flow)
+  - [Code Pattern Explanation](#code-pattern-explanation)
+  - [Benefits](#benefits)
+  - [Usage Guidelines](#usage-guidelines)
+  - [Summary](#summary)
 
 ---
 
@@ -981,3 +991,202 @@ User
 - All entities support soft validation on updates (skipMissingProperties: true)
 - Password hashing is handled automatically on insert/update operations
 - Unique constraints ensure data integrity across publicId fields
+
+---
+
+## Service Architecture & Transaction Handling
+
+### Overview
+
+Services in this application use a **singleton pattern** with **flexible transaction management**. Services can either:
+
+1. Create their own transactions (when used as singletons)
+2. Participate in existing transactions (when created with an EntityManager)
+
+### Singleton Services Pattern
+
+Services are created once at module load and reused across all requests:
+
+```typescript
+// apps/fin-folio-server/src/services/index.ts
+import { AppDataSource } from "@/data-source";
+import { createAuthService } from "./auth.service";
+
+export const authService = createAuthService(AppDataSource);
+```
+
+### Transaction Logic
+
+All service methods that need database transactions use a **smart transaction pattern**:
+
+```typescript
+// Example from auth.service.ts
+const registerUser = async (credentials, auth) => {
+  const execute = async (manager: EntityManager) => {
+    // Transaction logic here
+    const txnUserRepo = new UserRepository(manager);
+    // ... perform operations
+  };
+
+  return dataContext instanceof EntityManager
+    ? execute(dataContext) // Use existing transaction
+    : runTransaction({ label: "Register User" }, execute); // Create new transaction
+};
+```
+
+### How It Works
+
+**The service always executes within a transaction**, but it intelligently decides **which transaction** to use:
+
+1. **If service was created with `EntityManager`** → Uses the **existing transaction** (from caller)
+2. **If service was created with `DataSource`** → Creates a **new transaction** (in the service)
+
+### Visual Flow
+
+#### Scenario 1: Singleton Service (DataSource) - Creates Own Transaction
+
+```
+┌─────────────────────────────────────────────┐
+│ Call: authService.registerUser()             │
+│ ↓                                            │
+│ Check: dataContext instanceof EntityManager? │
+│ NO (it's DataSource)                         │
+│ ↓                                            │
+│ Create NEW transaction here                  │
+│ ↓                                            │
+│ Execute with new transaction                 │
+└─────────────────────────────────────────────┘
+```
+
+**Example:**
+
+```typescript
+// Singleton service created with DataSource
+export const authService = createAuthService(AppDataSource);
+
+// When called, creates its own transaction
+await authService.registerUser(credentials, req.appAuth!);
+// → Creates NEW transaction internally
+```
+
+#### Scenario 2: Transaction-Scoped Service (EntityManager) - Uses Existing Transaction
+
+```
+┌─────────────────────────────────────────────┐
+│ Caller starts transaction:                  │
+│ runTransaction(async (manager) => {         │
+│   const authService = createAuthService(manager) │
+│   ↓                                         │
+│   Call: authService.registerUser()         │
+│   ↓                                         │
+│   Check: dataContext instanceof EntityManager? │
+│   YES! ✅                                    │
+│   ↓                                         │
+│   Use EXISTING transaction (manager)       │
+│   ↓                                         │
+│   Execute with caller's transaction         │
+│ })                                          │
+└─────────────────────────────────────────────┘
+```
+
+**Example:**
+
+```typescript
+// Service created inside an existing transaction
+await runTransaction(
+  { label: "Complex Operation" },
+  async (manager: EntityManager) => {
+    const authService = createAuthService(manager);
+
+    // Uses the existing transaction from caller
+    await authService.registerUser(credentials, req.appAuth!);
+    // → Uses EXISTING transaction (manager)
+  }
+);
+```
+
+### Code Pattern Explanation
+
+The key logic is in the conditional check:
+
+```typescript
+return dataContext instanceof EntityManager
+  ? execute(dataContext) // Use existing transaction
+  : runTransaction({ label: "..." }, execute); // Create new transaction
+```
+
+**TypeScript Type Narrowing:**
+
+- Using `dataContext instanceof EntityManager` directly in the conditional enables TypeScript to properly narrow the type
+- In the `true` branch, TypeScript knows `dataContext` is `EntityManager`
+- In the `false` branch, TypeScript knows it's `DataSource`
+
+### Benefits
+
+1. **Always Transactional**: Operations always run in transactions for data consistency
+2. **Flexible**: Services can work standalone or participate in larger transactions
+3. **Type-Safe**: TypeScript properly narrows types based on the check
+4. **Testable**: Easy to inject different contexts for testing
+
+### Usage Guidelines
+
+#### Use Singleton Services For:
+
+- Normal operations (read/write that don't need nested transactions)
+- Simple CRUD operations
+- Operations that need their own atomic transaction
+
+**Example:**
+
+```typescript
+import { authService } from "@/services";
+
+app.post("/auth/register", async (req, res) => {
+  // Service creates its own transaction internally
+  const result = await authService.registerUser(req.body, req.appAuth!);
+  res.json(result);
+});
+```
+
+#### Use Transaction-Scoped Services For:
+
+- Complex operations requiring multiple services in one transaction
+- Ensuring atomic operations across multiple service calls
+- Operations that must all succeed or all fail together
+
+**Example:**
+
+```typescript
+import { runTransaction } from "@/utils";
+import { createAuthService } from "@/services/auth.service";
+import { createUserService } from "@/services/user.service";
+
+app.post("/auth/register-with-profile", async (req, res) => {
+  await runTransaction({ label: "Register with Profile" }, async (manager) => {
+    // All operations use the same transaction
+    const authService = createAuthService(manager);
+    const userService = createUserService(manager);
+
+    const { user, tokens } = await authService.registerUser(
+      req.body,
+      req.appAuth!
+    );
+    await userService.createProfile(user.id, req.body.profile);
+    // If either fails, entire transaction rolls back
+  });
+});
+```
+
+### Summary
+
+| Scenario               | Service Created With | Transaction Behavior                      |
+| ---------------------- | -------------------- | ----------------------------------------- |
+| **Singleton**          | `DataSource`         | Creates **new** transaction internally    |
+| **Transaction-Scoped** | `EntityManager`      | Uses **existing** transaction from caller |
+
+The pattern ensures:
+
+- ✅ All operations are transactional
+- ✅ Services can work standalone
+- ✅ Services can participate in larger transactions
+- ✅ Type-safe with proper TypeScript narrowing

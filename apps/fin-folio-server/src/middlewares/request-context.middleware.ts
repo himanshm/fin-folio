@@ -1,10 +1,9 @@
-import { CustomRequest } from "@/types";
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import requestIp from "request-ip";
 import { UAParser } from "ua-parser-js";
 
 export const requestContext = (
-  req: CustomRequest,
+  req: Request,
   _res: Response,
   next: NextFunction
 ): void => {
@@ -24,7 +23,7 @@ export const requestContext = (
       .filter(Boolean)
       .join(" / ") || "unknown";
 
-  req.appAuth ??= { userId: "", ipAddress, deviceInfo };
+  req.appAuth ??= { userId: "", sessionId: "", ipAddress, deviceInfo };
   req.appAuth.ipAddress = ipAddress;
   req.appAuth.deviceInfo = deviceInfo;
 

@@ -12,6 +12,7 @@ import {
   ValidationError,
   generateAccessToken,
   generateRefreshToken,
+  logger,
   runTransaction,
   verifyRefreshToken
 } from "@/utils";
@@ -74,7 +75,7 @@ export const createAuthService = (
     credentials: RegisterUserCredentials,
     auth: AppAuth
   ) => {
-    return runTransaction({ label: "Register User" }, async manager => {
+    const execute = async (manager: EntityManager) => {
       const txnUserRepo = new UserRepository(manager);
 
       const { name, email, password } = credentials;
@@ -97,8 +98,13 @@ export const createAuthService = (
       );
 
       await createSession(user, refreshToken, deviceInfo, ipAddress);
+      logger.info({ userId: user.publicId }, "🧩 User registered successfully");
       return { user, tokens: { accessToken, refreshToken } };
-    });
+    };
+
+    return dataContext instanceof EntityManager
+      ? execute(dataContext)
+      : runTransaction({ label: "Register User" }, execute);
   };
 
   const signInUser = async (
@@ -128,7 +134,7 @@ export const createAuthService = (
   };
 
   const refreshToken = async (oldRefreshToken: string, auth: AppAuth) => {
-    return runTransaction({ label: "Refresh Token" }, async manager => {
+    const execute = async (manager: EntityManager) => {
       const txnUserRepo = new UserRepository(manager);
       const txnSessionRepo = new UserSessionRepository(manager);
 
@@ -164,11 +170,15 @@ export const createAuthService = (
       await txnSessionRepo.save(session);
 
       return { tokens: { accessToken, refreshToken: newRefreshToken } };
-    });
+    };
+
+    return dataContext instanceof EntityManager
+      ? execute(dataContext)
+      : runTransaction({ label: "Refresh Token" }, execute);
   };
 
   const signOutUser = async (sessionId: string) => {
-    return runTransaction({ label: "Sign Out User" }, async manager => {
+    const execute = async (manager: EntityManager) => {
       const txnUserRepo = new UserRepository(manager);
       const txnSessionRepo = new UserSessionRepository(manager);
 
@@ -183,12 +193,17 @@ export const createAuthService = (
       await txnUserRepo.updateById(user.id, {
         refreshTokenVersion: user.refreshTokenVersion + 1
       });
+      logger.info({ userId: user.publicId }, "🧩 User signed out successfully");
       return { success: true };
-    });
+    };
+
+    return dataContext instanceof EntityManager
+      ? execute(dataContext)
+      : runTransaction({ label: "Sign Out User" }, execute);
   };
 
   const signOutAllSessions = async (userId: string) => {
-    return runTransaction({ label: "Sign Out All Sessions" }, async manager => {
+    const execute = async (manager: EntityManager) => {
       const txnUserRepo = new UserRepository(manager);
       const txnSessionRepo = new UserSessionRepository(manager);
 
@@ -203,8 +218,16 @@ export const createAuthService = (
         session.revoked = true;
         await txnSessionRepo.save(session);
       }
+      logger.info(
+        { userId: user.publicId },
+        "🧩 All sessions signed out successfully"
+      );
       return { success: true };
-    });
+    };
+
+    return dataContext instanceof EntityManager
+      ? execute(dataContext)
+      : runTransaction({ label: "Sign Out All Sessions" }, execute);
   };
 
   return {
