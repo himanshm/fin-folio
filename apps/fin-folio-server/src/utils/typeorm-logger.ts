@@ -5,12 +5,31 @@ import type { QueryRunner, Logger as TypeOrmLogger } from "typeorm";
  */
 
 export class PinoTypeOrmLogger implements TypeOrmLogger {
+  /**
+   * Removes escape characters from query string for cleaner logging
+   */
+  private formatQuery(query: string): string {
+    // Remove escaped quotes and other common escape sequences
+    return query
+      .replace(/\\"/g, '"') // \" -> "
+      .replace(/\\'/g, "'") // \' -> '
+      .replace(/\\n/g, "\n") // \n -> actual newline
+      .replace(/\\t/g, "\t") // \t -> actual tab
+      .replace(/\\\\/g, "\\") // \\ -> \
+      .trim();
+  }
+
   logQuery(
     query: string,
     parameters?: unknown[],
     _queryRunner?: QueryRunner
   ): void {
-    logger.debug({ query, parameters }, "🧩 TypeORM Query");
+    const formattedQuery = this.formatQuery(query);
+    logger.debug(
+      { parameters },
+      "🧩 TypeORM Query\n    query: %s",
+      formattedQuery
+    );
   }
 
   logQueryError(
@@ -19,7 +38,12 @@ export class PinoTypeOrmLogger implements TypeOrmLogger {
     parameters?: unknown[],
     _queryRunner?: QueryRunner
   ): void {
-    logger.error({ error, query, parameters }, "❌ TypeORM Query Error");
+    const formattedQuery = this.formatQuery(query);
+    logger.error(
+      { error, parameters },
+      "❌ TypeORM Query Error\n    query: %s",
+      formattedQuery
+    );
   }
 
   logQuerySlow(
@@ -28,7 +52,13 @@ export class PinoTypeOrmLogger implements TypeOrmLogger {
     parameters?: unknown[],
     _queryRunner?: QueryRunner
   ): void {
-    logger.warn({ time, query, parameters }, "🐢 Slow Query");
+    const formattedQuery = this.formatQuery(query);
+    logger.warn(
+      { time, parameters },
+      "🐢 Slow Query (%dms)\n    query: %s",
+      time,
+      formattedQuery
+    );
   }
 
   logSchemaBuild(message: string, _queryRunner?: QueryRunner): void {
