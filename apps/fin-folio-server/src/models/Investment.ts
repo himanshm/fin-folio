@@ -1,6 +1,6 @@
 import { InstrumentType } from "@/enums/InstrumentType";
 import { getIsInvalidMessage } from "@/utils";
-import { IsDate, IsDecimal, IsEnum } from "class-validator";
+import { IsDate, IsDecimal, IsEnum, IsUUID } from "class-validator";
 import {
   Column,
   Entity,
@@ -18,7 +18,8 @@ export class Investment extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
+  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column("double precision")

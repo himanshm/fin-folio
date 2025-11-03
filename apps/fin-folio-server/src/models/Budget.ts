@@ -1,5 +1,5 @@
 import { getIsInvalidMessage } from "@/utils";
-import { IsDate } from "class-validator";
+import { IsDate, IsUUID } from "class-validator";
 import {
   Column,
   Entity,
@@ -18,7 +18,8 @@ export class Budget extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
+  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "date" })

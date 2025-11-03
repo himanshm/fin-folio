@@ -1,6 +1,6 @@
 import { CategoryOrigin, CategoryType } from "@/enums/CategoryType";
 import { getIsInvalidMessage } from "@/utils";
-import { IsDecimal, IsEnum, IsOptional, Length } from "class-validator";
+import { IsDecimal, IsEnum, IsOptional, IsUUID, Length } from "class-validator";
 import {
   Column,
   Entity,
@@ -20,7 +20,8 @@ export class Category extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
+  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "enum", enum: CategoryType })

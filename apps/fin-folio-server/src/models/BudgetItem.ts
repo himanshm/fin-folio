@@ -1,5 +1,5 @@
 import { getIsInvalidMessage } from "@/utils";
-import { IsDecimal, IsOptional } from "class-validator";
+import { IsDecimal, IsOptional, IsUUID } from "class-validator";
 import {
   Column,
   Entity,
@@ -19,7 +19,8 @@ export class BudgetItem extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
+  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "double precision" })

@@ -1,6 +1,6 @@
 import { TransactionType } from "@/enums/TransactionType";
 import { getIsInvalidMessage } from "@/utils";
-import { IsDate, IsDecimal, IsEnum, IsOptional } from "class-validator";
+import { IsDate, IsDecimal, IsEnum, IsOptional, IsUUID } from "class-validator";
 import {
   Column,
   Entity,
@@ -19,7 +19,8 @@ export class Transaction extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
+  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "varchar", nullable: true })

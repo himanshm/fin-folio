@@ -18,7 +18,7 @@ import {
   PASSWORD_VALIDATION_REGEX,
   getIsInvalidMessage
 } from "@/utils";
-import { IsEmail, IsOptional, Length, Matches } from "class-validator";
+import { IsEmail, IsOptional, IsUUID, Length, Matches } from "class-validator";
 import { Budget } from "./Budget";
 import { Category } from "./Category";
 import { Investment } from "./Investment";
@@ -31,7 +31,9 @@ export class User extends ValidationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
+  @IsOptional()
+  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "varchar", nullable: false })
@@ -90,7 +92,7 @@ export class User extends ValidationEntity {
 
   @AfterLoad()
   cachePassword() {
-    if (!this.password) {
+    if (this.password) {
       this.cachedPassword = this.password;
     }
   }
