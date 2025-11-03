@@ -12,7 +12,7 @@ export class ValidationError extends BaseError {
   // For User Input Validation and Data Validation
   additionalData?: Record<string, unknown>;
   constructor(message: string) {
-    super(`${message} || 'Invalid Data'`, 400);
+    super(message || "Invalid Data", 400);
   }
 }
 
@@ -26,7 +26,7 @@ export class ConfigurationError extends BaseError {
 export class ResourceNotFoundError extends BaseError {
   // For when requested resource doesn't exist (user, post, etc.)
   constructor(resource: string) {
-    super(`${resource || "Resource"} not Found'`, 404);
+    super(resource || "Resource not Found", 404);
   }
 }
 

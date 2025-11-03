@@ -35,8 +35,8 @@ export class UserRepository extends BaseRepository<User> {
         email: true,
         password: true,
         refreshTokenVersion: true
-      },
-      relations: { sessions: true }
+      }
+      // relations: { sessions: true }
     };
     return this.findOne(filter);
   }

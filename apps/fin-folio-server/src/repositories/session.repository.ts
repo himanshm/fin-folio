@@ -28,7 +28,8 @@ export class UserSessionRepository extends BaseRepository<UserSession> {
   findOneBySessionIdForAuth(sessionId: string): Promise<UserSession | null> {
     const filter: FindOneOptions<UserSession> = {
       where: {
-        id: sessionId
+        id: sessionId,
+        revoked: false
       },
       relations: { user: true }
     };

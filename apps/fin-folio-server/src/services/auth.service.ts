@@ -39,14 +39,16 @@ export const createAuthService = (
     user: User,
     refreshToken: string,
     deviceInfo?: string,
-    ipAddress?: string
+    ipAddress?: string,
+    txnSessionRepo?: UserSessionRepository
   ): Promise<void> => {
     const tokenHash = await hashToken(refreshToken);
     const expiresAt = new Date(
       Date.now() + REFRESH_TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000
     );
 
-    await sessionRepository.createAndSave({
+    const repo = txnSessionRepo || sessionRepository;
+    await repo.createAndSave({
       user,
       tokenHash,
       deviceInfo,
@@ -56,10 +58,7 @@ export const createAuthService = (
     });
   };
 
-  const generateTokens = async (
-    userId: string | number,
-    tokenVersion: number
-  ) => {
+  const generateTokens = async (userId: string, tokenVersion: number) => {
     const accessToken = generateAccessToken(userId, {
       expiresIn: `${ACCESS_TOKEN_EXPIRY_MINUTES}m`
     });
@@ -77,6 +76,7 @@ export const createAuthService = (
   ) => {
     const execute = async (manager: EntityManager) => {
       const txnUserRepo = new UserRepository(manager);
+      const txnSessionRepo = new UserSessionRepository(manager);
 
       const { name, email, password } = credentials;
       const { ipAddress, deviceInfo } = auth;
@@ -93,11 +93,17 @@ export const createAuthService = (
       const user = await txnUserRepo.createAndSave({ name, email, password });
 
       const { accessToken, refreshToken } = await generateTokens(
-        user.id,
+        user.publicId,
         user.refreshTokenVersion
       );
 
-      await createSession(user, refreshToken, deviceInfo, ipAddress);
+      await createSession(
+        user,
+        refreshToken,
+        deviceInfo,
+        ipAddress,
+        txnSessionRepo
+      );
       logger.info({ userId: user.publicId }, "🧩 User registered successfully");
       return { user, tokens: { accessToken, refreshToken } };
     };
@@ -125,7 +131,7 @@ export const createAuthService = (
     }
 
     const { accessToken, refreshToken } = await generateTokens(
-      user.id,
+      user.publicId,
       user.refreshTokenVersion
     );
 
@@ -158,7 +164,7 @@ export const createAuthService = (
       if (!valid) throw new AuthenticationError("Invalid refresh token");
 
       const { accessToken, refreshToken: newRefreshToken } =
-        await generateTokens(user.id, user.refreshTokenVersion);
+        await generateTokens(user.publicId, user.refreshTokenVersion);
 
       session.tokenHash = await hashToken(newRefreshToken);
       session.lastUsedAt = new Date();
@@ -194,7 +200,6 @@ export const createAuthService = (
         refreshTokenVersion: user.refreshTokenVersion + 1
       });
       logger.info({ userId: user.publicId }, "🧩 User signed out successfully");
-      return { success: true };
     };
 
     return dataContext instanceof EntityManager
@@ -222,7 +227,6 @@ export const createAuthService = (
         { userId: user.publicId },
         "🧩 All sessions signed out successfully"
       );
-      return { success: true };
     };
 
     return dataContext instanceof EntityManager
