@@ -5,7 +5,14 @@ import helmet from "helmet";
 import http from "http";
 import config from "./config";
 import { AppDataSource } from "./data-source";
-import { errorHandler, notFoundHandler, requestContext } from "./middlewares";
+import {
+  authenticate,
+  errorHandler,
+  httpLogger,
+  notFoundHandler,
+  requestContext
+} from "./middlewares";
+import authRouter from "./routes/auth.routes";
 import {
   handleServerError,
   logger,
@@ -44,13 +51,16 @@ class Application {
       this.app.use(helmet()); // TODO: Customize helmet for production
     }
     this.app.use(express.json());
+    this.app.use(httpLogger);
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(requestContext);
+    this.app.use("/app/api", authenticate);
   }
 
   private registerRoutes() {
     // Register routes here
+    this.app.use("/api/v0/auth", authRouter);
   }
 
   private registerErrorHandlers() {
@@ -65,27 +75,6 @@ class Application {
       logger.error(`❌ Database initialization failed:, ${error}`);
       process.exit(1);
     }
-
-    // Test: Create a new user
-    // const user = new User();
-    // user.name = "Temba";
-    // user.email = "lauren-bell@noemail.com";
-    // user.password = "lauren@123";
-    // user.country = "UK";
-    // user.currency = "GBP";
-
-    // try {
-    //   // const newUser = await AppDataSource.manager.save(user);
-    //   // console.log('New user: ', newUser);
-    //   // console.log('User created successfully');
-    //   const lastUser = await AppDataSource.manager.findOneBy(User, {
-    //     email: "lauren-bell@noemail.com"
-    //   });
-    //   const isPasswordValid = await lastUser?.isPasswordValid("lauren@1234");
-    //   console.log("Is password valid: ", isPasswordValid);
-    // } catch (error) {
-    //   console.error(error);
-    // }
   }
 
   public start(): void {
@@ -120,7 +109,7 @@ class Application {
         process.exit(0);
       });
     } catch (error) {
-      logger.error(`Error during shutdown", ${error}`);
+      logger.error(`Error during shutdown, ${error}`);
       process.exit(1);
     }
   }
