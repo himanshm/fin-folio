@@ -16,6 +16,7 @@ services:
       - PG_USER=${PG_USER}
       - PG_PASSWORD=${PG_PASSWORD}
       - PG_DB=${PG_DB}
+      - LOG_TYPEORM=${LOG_TYPEORM:-false}
       # - JWT_SECRET=$JWT_SECRET // TODO: check if this is used
     ports:
       - ${BE_SERVICE_PORT}:${BE_SERVICE_PORT}
