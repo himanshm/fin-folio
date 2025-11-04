@@ -3,11 +3,15 @@ import { getIsInvalidMessage } from "@/utils";
 import { IsDecimal, IsEnum, IsOptional, IsUUID, Length } from "class-validator";
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique
+  Unique,
+  UpdateDateColumn,
+  VersionColumn
 } from "typeorm";
 import { BudgetItem } from "./BudgetItem";
 import { Investment } from "./Investment";
@@ -43,6 +47,18 @@ export class Category extends ValidationEntity {
   @Column({ type: "enum", enum: CategoryOrigin, default: CategoryOrigin.USER })
   @IsEnum(CategoryOrigin, { message: getIsInvalidMessage("Category Origin") })
   origin: CategoryOrigin;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToOne(() => User, user => user.categories)
   user: User;

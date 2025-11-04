@@ -11,10 +11,14 @@ import {
 } from "class-validator";
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn
 } from "typeorm";
 import { User } from "./User";
 import { ValidationEntity } from "./ValidationEntity";
@@ -53,6 +57,18 @@ export class UserSession extends ValidationEntity {
   @IsOptional()
   @IsDate({ message: getIsInvalidMessage("Last Used At") })
   lastUsedAt?: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToOne(() => User, user => user.sessions, { onDelete: "CASCADE" })
   @JoinColumn({ name: "userId", referencedColumnName: "id" })

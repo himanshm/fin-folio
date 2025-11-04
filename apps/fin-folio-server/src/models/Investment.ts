@@ -3,10 +3,14 @@ import { getIsInvalidMessage } from "@/utils";
 import { IsDate, IsDecimal, IsEnum, IsUUID } from "class-validator";
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Unique
+  Unique,
+  UpdateDateColumn,
+  VersionColumn
 } from "typeorm";
 import { Category } from "./Category";
 import { User } from "./User";
@@ -43,6 +47,18 @@ export class Investment extends ValidationEntity {
   @Column({ type: "date" })
   @IsDate({ message: getIsInvalidMessage("Purchase Date") })
   purchasedAt: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToOne(() => User, user => user.investments)
   user: User;

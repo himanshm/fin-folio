@@ -2,11 +2,15 @@ import { getIsInvalidMessage } from "@/utils";
 import { IsDecimal, IsOptional, IsUUID } from "class-validator";
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique
+  Unique,
+  UpdateDateColumn,
+  VersionColumn
 } from "typeorm";
 import { Budget } from "./Budget";
 import { Category } from "./Category";
@@ -37,6 +41,18 @@ export class BudgetItem extends ValidationEntity {
   )
   @IsOptional()
   actualAmount: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToOne(() => Budget, budget => budget.items)
   budget: Budget;

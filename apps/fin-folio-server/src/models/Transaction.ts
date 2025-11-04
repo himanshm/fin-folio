@@ -3,10 +3,14 @@ import { getIsInvalidMessage } from "@/utils";
 import { IsDate, IsDecimal, IsEnum, IsOptional, IsUUID } from "class-validator";
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Unique
+  Unique,
+  UpdateDateColumn,
+  VersionColumn
 } from "typeorm";
 import { BudgetItem } from "./BudgetItem";
 import { Category } from "./Category";
@@ -41,6 +45,18 @@ export class Transaction extends ValidationEntity {
   @Column({ type: "date" })
   @IsDate({ message: getIsInvalidMessage("Date") })
   date: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToOne(() => Category, category => category.transactions)
   category: Category;

@@ -4,10 +4,14 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique
+  Unique,
+  UpdateDateColumn,
+  VersionColumn
 } from "typeorm";
 import { ValidationEntity } from "./ValidationEntity";
 
@@ -70,6 +74,18 @@ export class User extends ValidationEntity {
 
   @Column({ type: "int", default: 0 })
   refreshTokenVersion: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: number;
 
   @OneToMany(() => Category, category => category.user)
   categories: Category[];
