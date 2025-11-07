@@ -37,11 +37,13 @@ services:
       target: client
     container_name: fin-folio-client
     restart: always
-    env_file: .env
+    # env_file: .env
+    env_file:
+      - ./apps/fin-folio-client/.env
     environment:
-      - PORT=${WEB_CLIENT_PORT}
+      - PORT=${VITE_WEB_CLIENT_PORT}
     ports:
-      - ${WEB_CLIENT_PORT}:${WEB_CLIENT_PORT}
+      - ${VITE_WEB_CLIENT_PORT}:${VITE_WEB_CLIENT_PORT}
     volumes:
       - ./apps/fin-folio-client:/usr/app/apps/fin-folio-client
       # - /usr/app/node_modules
