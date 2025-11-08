@@ -39,11 +39,11 @@ services:
     restart: always
     # env_file: .env
     env_file:
-      - ./apps/fin-folio-client/.env
+      - .env
     environment:
-      - PORT=${VITE_WEB_CLIENT_PORT}
+      - PORT=${WEB_CLIENT_PORT}
     ports:
-      - ${VITE_WEB_CLIENT_PORT}:${VITE_WEB_CLIENT_PORT}
+      - ${WEB_CLIENT_PORT}:${WEB_CLIENT_PORT}
     volumes:
       - ./apps/fin-folio-client:/usr/app/apps/fin-folio-client
       # - /usr/app/node_modules

@@ -234,11 +234,18 @@ export const createAuthService = (
       : runTransaction({ label: "Sign Out All Sessions" }, execute);
   };
 
+  const getCurrentUser = async (userId: string) => {
+    const user = await userRepository.findOneByPublicIdForProfile(userId);
+    if (!user) throw new AuthenticationError("User not found");
+    return user;
+  };
+
   return {
     registerUser,
     signInUser,
     refreshToken,
     signOutUser,
-    signOutAllSessions
+    signOutAllSessions,
+    getCurrentUser
   };
 };

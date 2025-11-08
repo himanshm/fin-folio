@@ -40,4 +40,22 @@ export class UserRepository extends BaseRepository<User> {
     };
     return this.findOne(filter);
   }
+
+  findOneByPublicIdForProfile(publicId: string): Promise<User | null> {
+    const filter: FindOneOptions<User> = {
+      where: {
+        publicId
+      },
+      select: {
+        id: true,
+        publicId: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        country: true,
+        currency: true
+      }
+    };
+    return this.findOne(filter);
+  }
 }
