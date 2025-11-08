@@ -173,6 +173,13 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.loading = false;
         state.initialized = true;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.error = action.payload?.message || "Sign Out failed";
+        state.loading = false;
+        state.initialized = true;
+        state.isAuthenticated = false;
+        state.user = null;
       });
     // Get Current User
     builder
