@@ -25,3 +25,12 @@
     Whatever fields you omit are treated as missing and may be reset/removed. Think “complete update.”
 - `PATCH` merges provided fields into the existing resource—ideal for targeted edits.
   - PATCH applies a partial update. You send only the fields to change (often in JSON Patch or a custom schema), and the server merges them into the existing resource.
+
+### Utility Types: Pick & Partial
+
+- `Pick<T, K>` creates a type with only the keys listed in `K`. We use it to derive an `AuthUser` subset from the full `User` model:
+  - `type AuthUserRequiredFields = Pick<User, "id" | "name" | "email">;`
+- `Partial<T>` keeps the same properties but makes them optional. Layering it lets us mark optional profile fields while reusing `User`'s types:
+  - `type AuthUserOptionalFields = Partial<Pick<User, "avatarUrl" | "country" | "currency">>;`
+- Combining the two keeps auth responses lightweight yet type-safe:
+  - `export type AuthUser = AuthUserRequiredFields & AuthUserOptionalFields;`
