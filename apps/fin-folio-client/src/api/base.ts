@@ -27,13 +27,16 @@ export const baseApi = (): AxiosInstance => {
 // ===== GENERIC API METHODS =====
 
 export const get = async <T = unknown>(
-  url: string,
+  endpoint: string,
   params?: Record<string, unknown>
 ): Promise<ApiResponse<T>> => {
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await baseApi().get(url, {
-      params
-    });
+    const response: AxiosResponse<ApiResponse<T>> = await baseApi().get(
+      endpoint,
+      {
+        params
+      }
+    );
     return response.data;
   } catch (error) {
     throw handleApiError(error);
@@ -41,13 +44,13 @@ export const get = async <T = unknown>(
 };
 
 export const post = async <T = unknown>(
-  url: string,
+  endpoint: string,
   data?: unknown,
   params?: Record<string, unknown>
 ): Promise<ApiResponse<T>> => {
   try {
     const response: AxiosResponse<ApiResponse<T>> = await baseApi().post(
-      url,
+      endpoint,
       data,
       { params }
     );
@@ -58,13 +61,13 @@ export const post = async <T = unknown>(
 };
 
 export const put = async <T = unknown>(
-  url: string,
+  endpoint: string,
   data?: unknown,
   params?: Record<string, unknown>
 ): Promise<ApiResponse<T>> => {
   try {
     const response: AxiosResponse<ApiResponse<T>> = await baseApi().put(
-      url,
+      endpoint,
       data,
       { params }
     );
@@ -75,13 +78,13 @@ export const put = async <T = unknown>(
 };
 
 export const patch = async <T = unknown>(
-  url: string,
+  endpoint: string,
   data?: unknown,
   params?: Record<string, unknown>
 ): Promise<ApiResponse<T>> => {
   try {
     const response: AxiosResponse<ApiResponse<T>> = await baseApi().patch(
-      url,
+      endpoint,
       data,
       { params }
     );
@@ -92,12 +95,12 @@ export const patch = async <T = unknown>(
 };
 
 export const remove = async <T = unknown>(
-  url: string,
+  endpoint: string,
   params?: Record<string, unknown>
 ): Promise<ApiResponse<T>> => {
   try {
     const response: AxiosResponse<ApiResponse<T>> = await baseApi().delete(
-      url,
+      endpoint,
       { params }
     );
     return response.data;
