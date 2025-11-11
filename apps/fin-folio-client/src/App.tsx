@@ -8,7 +8,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider defaultTheme="system" storageKey="app-theme">
-        <RouterProvider router={router}></RouterProvider>
+        <RouterProvider router={router} />
       </ThemeProvider>
     </Provider>
   );
