@@ -11,8 +11,7 @@ type ThemeProviderProps = {
 export const ThemeProvider = ({
   children,
   defaultTheme = "system",
-  storageKey = "app-theme",
-  ...props
+  storageKey = "app-theme"
 }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
@@ -39,7 +38,7 @@ export const ThemeProvider = ({
   };
 
   return (
-    <ThemeProviderContext.Provider value={value} {...props}>
+    <ThemeProviderContext.Provider value={value}>
       {children}
     </ThemeProviderContext.Provider>
   );
