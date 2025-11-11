@@ -8,7 +8,7 @@ type ThemeProviderProps = {
   storageKey?: string;
 };
 
-export const AppProvider = ({
+export const ThemeProvider = ({
   children,
   defaultTheme = "system",
   storageKey = "app-theme",
