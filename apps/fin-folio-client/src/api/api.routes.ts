@@ -12,13 +12,13 @@ const buildEndpoint = (endpoint: string): string =>
 /********************** AUTHENTICATION ENDPOINTS **********************/
 
 export const AUTH_ENDPOINTS = {
-  LOGIN: buildEndpoint("/auth/login"),
-  REGISTER: buildEndpoint("/auth/register"),
-  LOGOUT: buildEndpoint("/auth/logout"),
-  REFRESH: buildEndpoint("/auth/refresh-token"),
-  CURRENT_USER: buildEndpoint("/auth/current-user"),
-  RESET_PASSWORD: buildEndpoint("/auth/reset-password"),
-  CHANGE_PASSWORD: buildEndpoint("/auth/change-password")
+  LOGIN: buildEndpoint("auth/login"),
+  REGISTER: buildEndpoint("auth/register"),
+  LOGOUT: buildEndpoint("auth/logout"),
+  REFRESH: buildEndpoint("auth/refresh-token"),
+  CURRENT_USER: buildEndpoint("auth/current-user"),
+  RESET_PASSWORD: buildEndpoint("auth/reset-password"),
+  CHANGE_PASSWORD: buildEndpoint("auth/change-password")
 } as const;
 
 /********************** USER ENDPOINTS **********************/
