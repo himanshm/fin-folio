@@ -2,11 +2,11 @@ import type { Theme } from "@/types";
 import { useEffect, useState, type ReactNode } from "react";
 import { ThemeProviderContext } from "./ThemeContext";
 
-type ThemeProviderProps = {
+interface ThemeProviderProps {
   children: ReactNode;
   defaultTheme?: Theme;
   storageKey?: string;
-};
+}
 
 export const ThemeProvider = ({
   children,
