@@ -5,3 +5,5 @@ export * from "./models.types";
 export * from "./auth.types";
 
 export * from "./ui.types";
+
+export * from "./avatar.types";

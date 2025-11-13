@@ -1,5 +1,6 @@
 import LogoIcon from "@/assets/images/fin-folio-logo.svg?react";
 import { Link } from "react-router";
+import UserAvatar from "./UserAvatar";
 import { Separator } from "./ui/separator";
 
 const AppHeader = () => {
@@ -15,6 +16,7 @@ const AppHeader = () => {
             />
           </div>
         </Link>
+        <UserAvatar />
       </div>
     </header>
   );
