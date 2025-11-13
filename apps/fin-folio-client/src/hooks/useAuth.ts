@@ -7,7 +7,7 @@ import {
   register
 } from "@/store/slices/authSlice";
 import type { LoginDto, RegisterDto } from "@/types";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
@@ -15,21 +15,6 @@ export const useAuth = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const auth = useAppSelector(state => state.auth);
-
-  // Listen for automatic logout events (from token refresh failures)
-  useEffect(() => {
-    const handleAutoLogout = () => {
-      dispatch(clearAuth());
-      toast.error("Session expired. Please log in again.");
-      navigate("/login", { replace: true });
-    };
-
-    window.addEventListener("auth:logout", handleAutoLogout);
-
-    return () => {
-      window.removeEventListener("auth:logout", handleAutoLogout);
-    };
-  }, [dispatch, navigate]);
 
   const signIn = useCallback(
     async (credentials: LoginDto) => {

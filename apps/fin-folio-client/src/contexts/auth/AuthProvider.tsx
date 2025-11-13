@@ -1,9 +1,10 @@
 import { Spinner } from "@/components/ui/spinner";
+import router from "@/routes";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { initializeAuth } from "@/store/slices/authSlice";
+import { clearAuth, initializeAuth } from "@/store/slices/authSlice";
 import { Loader } from "lucide-react";
 import { useEffect, useRef, type ReactNode } from "react";
-
+import { toast } from "sonner";
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -12,6 +13,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const dispatch = useAppDispatch();
   const { initialized, initializing } = useAppSelector(state => state.auth);
   const hasDispatched = useRef(false);
+
+  // Listen for automatic logout events (from token refresh failures)
+  // Single global logout listener
+  useEffect(() => {
+    const handleAutoLogout = () => {
+      dispatch(clearAuth());
+      toast.error("Session expired. Please log in again.");
+      router.navigate("/login", { replace: true });
+    };
+
+    window.addEventListener("auth:logout", handleAutoLogout);
+
+    return () => {
+      window.removeEventListener("auth:logout", handleAutoLogout);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!initialized && !hasDispatched.current) {

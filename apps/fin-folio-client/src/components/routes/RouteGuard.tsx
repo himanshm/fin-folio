@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Outlet } from "react-router";
 
 interface RouteGuardProps {
@@ -7,7 +7,7 @@ interface RouteGuardProps {
 }
 
 const RouteGuard = ({ requiredAuth, redirectTo }: RouteGuardProps) => {
-  const { isAuthenticated, initialized } = useAppSelector(state => state.auth);
+  const { isAuthenticated, initialized } = useAuth();
 
   if (!initialized) {
     return null;
