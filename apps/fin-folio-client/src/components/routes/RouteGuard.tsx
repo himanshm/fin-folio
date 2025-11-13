@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/store/hooks";
-import { Outlet, useNavigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
 interface RouteGuardProps {
   requiredAuth: boolean; // true = protected, false = public
@@ -8,7 +8,6 @@ interface RouteGuardProps {
 
 const RouteGuard = ({ requiredAuth, redirectTo }: RouteGuardProps) => {
   const { isAuthenticated, initialized } = useAppSelector(state => state.auth);
-  const navigate = useNavigate();
 
   if (!initialized) {
     return null;
@@ -17,7 +16,7 @@ const RouteGuard = ({ requiredAuth, redirectTo }: RouteGuardProps) => {
   const shouldRedirect = requiredAuth ? !isAuthenticated : isAuthenticated;
 
   if (shouldRedirect) {
-    navigate(redirectTo, { replace: true });
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <Outlet />;
