@@ -20,7 +20,7 @@ const AuthFormField = ({
   errors
 }: AuthFormFieldProps) => {
   const renderFormLabel = () => {
-    if (name === "password" || mode === "login") {
+    if (name === "password" && mode === "login") {
       return (
         <div className="flex items-center">
           <Label htmlFor={name}>{config.label}</Label>
