@@ -86,7 +86,7 @@ const AuthForm = ({
               to={config.footerLink.to}
               className="text-primary ml-1 underline-offset-4 hover:underline"
             >
-              {config.footerLink.text}
+              {config.footerLink.linkText}
             </Link>
           </p>
         </div>
