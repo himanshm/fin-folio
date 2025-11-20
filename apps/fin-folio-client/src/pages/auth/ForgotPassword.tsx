@@ -1,5 +1,7 @@
+import AuthForm from "@/components/AuthForm";
+
 const ForgotPassword = () => {
-  return <div>ForgotPassword</div>;
+  return <AuthForm mode="forgot-password" onSubmit={() => {}} />;
 };
 
 export default ForgotPassword;

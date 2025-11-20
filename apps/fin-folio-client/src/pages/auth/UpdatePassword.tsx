@@ -1,5 +1,7 @@
+import AuthForm from "@/components/AuthForm";
+
 const UpdatePassword = () => {
-  return <div>UpdatePassword</div>;
+  return <AuthForm mode="change-password" onSubmit={() => {}} />;
 };
 
 export default UpdatePassword;

@@ -6,6 +6,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ResetPassword from "./pages/auth/ResetPassword";
+import UpdatePassword from "./pages/auth/UpdatePassword";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,8 @@ const router = createBrowserRouter([
         element: <RouteGuard requiredAuth={true} redirectTo="/login" />,
         children: [
           { index: true, Component: Dashboard },
-          { path: "dashboard", Component: Dashboard }
+          { path: "dashboard", Component: Dashboard },
+          { path: "update-password", Component: UpdatePassword }
         ]
       },
       {
