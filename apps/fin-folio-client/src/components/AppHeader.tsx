@@ -2,7 +2,7 @@ import LogoIcon from "@/assets/images/fin-folio-logo.svg?react";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router";
 import ThemeToggle from "./ThemeToggle";
-import UserAvatar from "./UserAvatar";
+import UserAvatar from "./avatar/UserAvatar";
 import { Separator } from "./ui/separator";
 
 const AppHeader = () => {

@@ -1,8 +1,8 @@
 import type { AuthFormData, AuthFormFieldConfig, AuthFormMode } from "@/types";
 import type { FieldError, FieldErrors, UseFormRegister } from "react-hook-form";
 import { Link } from "react-router";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 interface AuthFormFieldProps {
   mode: AuthFormMode;

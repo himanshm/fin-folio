@@ -3,17 +3,17 @@ import type { AuthFormData, AuthFormMode, ResetPasswordDto } from "@/types";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
-import AuthFormField from "./AuthFormField";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "./ui/card";
-import { Spinner } from "./ui/spinner";
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle
+} from "../ui/card";
+import { Spinner } from "../ui/spinner";
+import AuthFormField from "./AuthFormField";
 
 interface AuthFormProps {
   mode: AuthFormMode;

@@ -1,4 +1,4 @@
-import AuthForm from "@/components/AuthForm";
+import AuthForm from "@/components/auth/AuthForm";
 import { useAuth } from "@/hooks/useAuth";
 import { isLoginDto, type AuthFormData } from "@/types";
 import { useNavigate } from "react-router";

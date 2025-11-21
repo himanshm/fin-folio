@@ -8,14 +8,14 @@ import {
   UserCog
 } from "lucide-react";
 import { useNavigate } from "react-router";
-import AvatarItem from "./AvatarItem";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
+import AvatarItem from "./AvatarItem";
 
 const UserAvatar = () => {
   const { user, signOut } = useAuth();
