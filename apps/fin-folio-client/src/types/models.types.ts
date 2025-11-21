@@ -5,4 +5,6 @@ export interface User {
   avatarUrl?: string;
   country?: string;
   currency?: string;
+  currencySymbol?: string;
+  locale?: string;
 }

@@ -2,7 +2,7 @@ import type { User } from "./models.types";
 
 type AuthUserRequiredFields = Pick<User, "id" | "name" | "email">;
 type AuthUserOptionalFields = Partial<
-  Pick<User, "avatarUrl" | "country" | "currency">
+  Pick<User, "avatarUrl" | "country" | "currency" | "currencySymbol" | "locale">
 >;
 
 export type AuthUser = AuthUserRequiredFields & AuthUserOptionalFields;
