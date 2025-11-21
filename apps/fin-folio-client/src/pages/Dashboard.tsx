@@ -29,7 +29,18 @@ const Dashboard = () => {
           icon={ArrowDownRight}
           trend={{ value: 5.2, isPositive: false }}
         />
-        {/* TODO: Add more stat cards as needed */}
+        <StatCard
+          title="Savings"
+          value={format(2721)}
+          icon={ArrowDownRight}
+          trend={{ value: 5.2, isPositive: false }}
+        />
+        <StatCard
+          title="Investments"
+          value={format(2721)}
+          icon={ArrowDownRight}
+          trend={{ value: 5.2, isPositive: false }}
+        />
       </div>
 
       {/* Charts Row */}
