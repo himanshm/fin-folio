@@ -15,7 +15,12 @@ export const registerUser: RequestHandler = asyncHandler(
     const userData = {
       id: user.publicId,
       name: user.name,
-      email: user.email
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      country: user.country,
+      currency: user.currency,
+      currencySymbol: user.currencySymbol,
+      locale: user.locale
     };
 
     setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
@@ -40,7 +45,12 @@ export const signInUser: RequestHandler = asyncHandler(
     const userData = {
       id: user.publicId,
       name: user.name,
-      email: user.email
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      country: user.country,
+      currency: user.currency,
+      currencySymbol: user.currencySymbol,
+      locale: user.locale
     };
 
     setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
@@ -82,7 +92,8 @@ export const getCurrentUser: RequestHandler = asyncHandler(
       email: user.email,
       avatarUrl: user.avatarUrl,
       country: user.country,
-      currency: user.currency
+      currency: user.currency,
+      currencySymbol: user.currencySymbol
     };
 
     return res.status(200).json({

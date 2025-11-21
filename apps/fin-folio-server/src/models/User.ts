@@ -72,6 +72,14 @@ export class User extends ValidationEntity {
   @IsOptional()
   currency: string;
 
+  @Column({ type: "varchar", nullable: true, default: "$" })
+  @IsOptional()
+  currencySymbol: string;
+
+  @Column({ type: "varchar", nullable: true, default: "en-US" })
+  @IsOptional()
+  locale: string;
+
   @Column({ type: "int", default: 0 })
   refreshTokenVersion: number;
 

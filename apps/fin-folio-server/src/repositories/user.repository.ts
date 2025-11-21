@@ -34,7 +34,10 @@ export class UserRepository extends BaseRepository<User> {
         name: true,
         email: true,
         password: true,
-        refreshTokenVersion: true
+        refreshTokenVersion: true,
+        currency: true,
+        currencySymbol: true,
+        locale: true
       }
       // relations: { sessions: true }
     };
@@ -53,7 +56,8 @@ export class UserRepository extends BaseRepository<User> {
         email: true,
         avatarUrl: true,
         country: true,
-        currency: true
+        currency: true,
+        currencySymbol: true
       }
     };
     return this.findOne(filter);
