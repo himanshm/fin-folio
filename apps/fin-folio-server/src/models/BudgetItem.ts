@@ -32,7 +32,7 @@ export class BudgetItem extends ValidationEntity {
     { decimal_digits: "2" },
     { message: getIsInvalidMessage("Amount") }
   )
-  plannedAmount: number;
+  budgetAmount: number; // budget item planned amount
 
   @Column("double precision", { nullable: true })
   @IsDecimal(
@@ -40,7 +40,7 @@ export class BudgetItem extends ValidationEntity {
     { message: getIsInvalidMessage("Actual Amount") }
   )
   @IsOptional()
-  actualAmount: number;
+  consumedAmount: number; // budget item actual consumed amount
 
   @CreateDateColumn()
   createdAt: Date;

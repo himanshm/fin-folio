@@ -33,8 +33,11 @@ export class Budget extends ValidationEntity {
   @Column({ type: "int", default: 1, nullable: false })
   active: number;
 
-  @Column({ type: "numeric", nullable: true })
-  totalPlanned?: number;
+  @Column({ type: "numeric" })
+  BudgetAmount: number; // Total Planned
+
+  @Column({ type: "numeric" })
+  ConsumedAmount: number; // Total actual
 
   @CreateDateColumn()
   createdAt: Date;

@@ -67,7 +67,7 @@ export class Category extends ValidationEntity {
   budgetItems: BudgetItem[];
 
   @OneToMany(() => Investment, investment => investment.category)
-  investments!: Investment[];
+  investments: Investment[];
 
   @OneToMany(() => Transaction, transaction => transaction.category)
   transactions: Transaction[];
