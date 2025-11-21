@@ -42,19 +42,22 @@ const ThemeToggle = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40 p-2">
-        {menuOptions.map(option => (
-          <DropdownMenuItem
-            key={option.value}
-            onClick={() => setTheme(option.value)}
-            className={cn(
-              "flex items-center gap-5 px-2 py-1.5",
-              theme === option.value && "bg-accent"
-            )}
-          >
-            <option.icon className="h-4 w-4" />
-            {option.label}
-          </DropdownMenuItem>
-        ))}
+        {menuOptions.map(option => {
+          const Icon = option.icon;
+          return (
+            <DropdownMenuItem
+              key={option.value}
+              onClick={() => setTheme(option.value)}
+              className={cn(
+                "flex items-center gap-5 px-2 py-1.5",
+                theme === option.value && "bg-accent"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {option.label}
+            </DropdownMenuItem>
+          );
+        })}
         <DropdownMenuItem></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
