@@ -28,8 +28,12 @@ export const errorHandler = (
     return sendErrorResponse(res, error.httpStatus, error.message);
   }
 
-  // Handle unknown errors
-  return sendErrorResponse(res, 500, "Internal server error");
+  // For non-BaseError:
+  return res.status(500).json({
+    success: false,
+    message: error.message ?? "Internal server error",
+    stack: error.stack ?? {}
+  });
 };
 
 export const notFoundHandler = (
