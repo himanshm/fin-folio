@@ -13,6 +13,8 @@ import {
   requestContext
 } from "./middlewares";
 import authRouter from "./routes/auth.routes";
+import budgetRouter from "./routes/budget.routes";
+import categoryRouter from "./routes/category.routes";
 import {
   handleServerError,
   logger,
@@ -61,6 +63,8 @@ class Application {
   private registerRoutes() {
     // Register routes here
     this.app.use("/api/v0/auth", authRouter);
+    this.app.use("/app/api/v0/categories", categoryRouter);
+    this.app.use("/app/api/v0/budgets", budgetRouter);
   }
 
   private registerErrorHandlers() {
