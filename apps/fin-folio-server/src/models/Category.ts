@@ -1,6 +1,10 @@
-import { CategoryOrigin, CategoryType } from "@/enums/CategoryType";
+import {
+  CategoryBucket,
+  CategoryOrigin,
+  CategoryType
+} from "@/enums/CategoryType";
 import { getIsInvalidMessage } from "@/utils";
-import { IsDecimal, IsEnum, IsOptional, IsUUID, Length } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, Length } from "class-validator";
 import {
   Column,
   CreateDateColumn,
@@ -25,22 +29,22 @@ export class Category extends ValidationEntity {
   id: number;
 
   @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
-  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "enum", enum: CategoryType })
   @IsEnum(CategoryType, { message: getIsInvalidMessage("Category Type") })
   type: CategoryType;
 
+  @Column({ type: "enum", enum: CategoryBucket, default: CategoryBucket.NEEDS })
+  @IsEnum(CategoryBucket, { message: getIsInvalidMessage("Category Bucket") })
+  bucket: CategoryBucket;
+
   @Column({ type: "varchar" })
   @Length(1, 50, { message: getIsInvalidMessage("Title") })
   title: string;
 
-  @Column("double precision", { nullable: true })
-  @IsDecimal(
-    { decimal_digits: "2" },
-    { message: getIsInvalidMessage("Accumulated Amount") }
-  )
+  @Column("numeric", { nullable: true })
+  @IsNumber({ maxDecimalPlaces: 2 })
   @IsOptional()
   accumulatedAmount: number;
 

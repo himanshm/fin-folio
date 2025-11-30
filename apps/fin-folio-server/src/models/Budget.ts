@@ -1,5 +1,5 @@
 import { getIsInvalidMessage } from "@/utils";
-import { IsDate, IsUUID } from "class-validator";
+import { IsDate } from "class-validator";
 import {
   Column,
   CreateDateColumn,
@@ -23,7 +23,6 @@ export class Budget extends ValidationEntity {
   id: number;
 
   @Column({ type: "uuid", unique: true, default: () => "gen_random_uuid()" })
-  @IsUUID(4, { message: getIsInvalidMessage("Public ID") })
   publicId: string;
 
   @Column({ type: "date" })
@@ -34,10 +33,10 @@ export class Budget extends ValidationEntity {
   active: number;
 
   @Column({ type: "numeric" })
-  BudgetAmount: number; // Total Planned
+  budgetAmount: number; // Total Planned
 
   @Column({ type: "numeric" })
-  ConsumedAmount: number; // Total actual
+  consumedAmount: number; // Total actual
 
   @CreateDateColumn()
   createdAt: Date;
