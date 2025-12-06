@@ -9,6 +9,7 @@ import {
   ChartTooltipContent,
   type ChartConfig
 } from "../ui/chart";
+import { createTooltipFormatter } from "./chartFormatter";
 
 export type DonutChartDatum = {
   name: string;
@@ -33,6 +34,9 @@ const DonutChart = ({
   className,
   tooltipFormatter
 }: DonutChartProps) => {
+  const defaultFormatter = createTooltipFormatter(config, value =>
+    String(value)
+  );
   return (
     <ChartContainer config={config} className={cn("w-full", className)}>
       <PieChart>
@@ -55,21 +59,12 @@ const DonutChart = ({
             <ChartTooltipContent
               nameKey="name"
               formatter={(rawValue, rawName) => {
-                const numericValue = Number(rawValue);
-                const name = String(rawName);
                 if (tooltipFormatter) {
+                  const numericValue = Number(rawValue);
+                  const name = String(rawName);
                   return tooltipFormatter(numericValue, name);
                 }
-                return (
-                  <div className="flex items-center justify-between gap-6">
-                    <span className="capitalize text-muted-foreground">
-                      {name}
-                    </span>
-                    <span className="font-mono font-medium text-foreground">
-                      {numericValue}
-                    </span>
-                  </div>
-                );
+                return defaultFormatter(rawValue, rawName);
               }}
             />
           }
