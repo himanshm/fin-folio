@@ -1,18 +1,18 @@
-import { useCurrency } from "@/hooks/useCurrency";
-import { getPercent } from "@/lib/utils";
-import type { BudgetItem } from "@/types";
-import type { BudgetCategoryType } from "@/types/budget.types";
-import { createTooltipFormatter } from "../chart/chartFormatter";
-import type { DonutChartDatum } from "../chart/DonutChart";
-import DonutChart from "../chart/DonutChart";
+import { createTooltipFormatter } from "@/components/chart/chartFormatter";
+import type { DonutChartDatum } from "@/components/chart/DonutChart";
+import DonutChart from "@/components/chart/DonutChart";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from "../ui/card";
-import type { ChartConfig } from "../ui/chart";
+} from "@/components/ui/card";
+import type { ChartConfig } from "@/components/ui/chart";
+import { useCurrency } from "@/hooks/useCurrency";
+import { getPercent } from "@/lib/utils";
+import type { BudgetItem } from "@/types";
+import type { BudgetCategoryType } from "@/types/budget.types";
 
 const spendingChartConfig = {
   needs: {
