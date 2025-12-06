@@ -11,7 +11,7 @@ export interface User {
 }
 
 export interface BudgetItem {
-  publicId: string;
+  id: string;
   category: string;
   categoryType: BudgetCategoryType;
   budgetAmount: number;
