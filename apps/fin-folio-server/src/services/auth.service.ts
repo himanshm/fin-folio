@@ -157,11 +157,22 @@ export const createAuthService = (
         throw new AuthenticationError("Invalid user or session");
       }
 
-      const session = await txnSessionRepo.findOneByUserIdForAuth(user.id);
-      if (!session) throw new AuthenticationError("Session not found");
-
-      const valid = await session.isTokenValid(oldRefreshToken);
-      if (!valid) throw new AuthenticationError("Invalid refresh token");
+      // Find the session that matches this specific refresh token
+      const sessions = await txnSessionRepo.findAllActiveByUserIdForAuth(
+        user.id
+      );
+      let matchingSession = null;
+      for (const session of sessions) {
+        const isValid = await session.isTokenValid(oldRefreshToken);
+        if (isValid) {
+          matchingSession = session;
+          break;
+        }
+      }
+      if (!matchingSession) {
+        throw new AuthenticationError("Session not found or token invalid");
+      }
+      const session = matchingSession;
 
       const { accessToken, refreshToken: newRefreshToken } =
         await generateTokens(user.publicId, user.refreshTokenVersion);
