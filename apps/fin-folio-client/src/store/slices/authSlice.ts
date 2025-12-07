@@ -192,6 +192,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.loading = false;
         state.initialized = true;
+        localStorage.removeItem("cachedUser");
       })
       .addCase(logout.rejected, (state, action) => {
         state.error = action.payload?.message || "Sign Out failed";
