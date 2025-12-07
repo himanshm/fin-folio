@@ -1,4 +1,14 @@
 import type { BudgetCategoryType } from "./budget.types";
+
+export type CategoryType =
+  | "INCOME"
+  | "EXPENSE"
+  | "SAVINGS"
+  | "DEBT"
+  | "INVESTMENT";
+export type CategoryBucket = "NEEDS" | "WANTS" | "SAVINGS";
+export type CategoryOrigin = "SYSTEM" | "USER";
+
 export interface User {
   id: string;
   name: string;
@@ -18,9 +28,18 @@ export interface BudgetItem {
   consumedAmount: number;
 }
 
-export type BudgetOverview = {
+export interface BudgetOverview {
   budgetAmount: number;
   consumedAmount: number;
   income: number;
   items: BudgetItem[];
-};
+}
+
+export interface Category {
+  id: string;
+  title: string;
+  type: CategoryType;
+  bucket: CategoryBucket;
+  origin: CategoryOrigin;
+  accumulatedAmount: number;
+}
