@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import {
   ArrowLeftRight,
   BarChart3,
+  ChartBarStacked,
   Home,
   Settings,
   Target,
@@ -31,6 +32,11 @@ const navItems: NavItem[] = [
     label: "Budgets",
     path: "/budgets",
     icon: Target
+  },
+  {
+    label: "Categories",
+    path: "/categories",
+    icon: ChartBarStacked
   },
   {
     label: "Investments",
