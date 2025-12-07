@@ -37,7 +37,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [dispatch, initialized]);
 
-  if (!initialized) {
+  const cachedUser = localStorage.getItem("cachedUser");
+  const showContent = initialized || !!cachedUser;
+
+  if (!showContent) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center space-y-4">

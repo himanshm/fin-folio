@@ -1,6 +1,6 @@
 import { authService } from "@/api/services/auth.service";
 import type { ApiError, AuthUser, LoginDto, RegisterDto } from "@/types";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../withTypes";
 
 interface AuthState {
@@ -96,6 +96,16 @@ export const initializeAuth = createAppAsyncThunk<
   if (state.auth.initialized) {
     return;
   }
+
+  const cachedUser = localStorage.getItem("cachedUser");
+  if (cachedUser) {
+    try {
+      const user = JSON.parse(cachedUser) as AuthUser;
+      dispatch(authSlice.actions.setCachedUser(user));
+    } catch (_error) {
+      localStorage.removeItem("cachedUser");
+    }
+  }
   try {
     await dispatch(getCurrentUser());
     // The getCurrentUser thunk will handle setting the auth state
@@ -103,6 +113,7 @@ export const initializeAuth = createAppAsyncThunk<
     return;
   } catch (error) {
     // Even if it fails, we mark as initialized to prevent retries
+    localStorage.removeItem("cachedUser");
     return;
   }
 });
@@ -119,10 +130,16 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.loading = false;
+      localStorage.removeItem("cachedUser");
     },
 
     clearError: state => {
       state.error = null;
+    },
+
+    setCachedUser: (state, action: PayloadAction<AuthUser>) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
     }
   },
   extraReducers: builder => {
@@ -137,6 +154,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.initialized = true;
         state.loading = false;
+        localStorage.setItem("cachedUser", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.error = action.payload?.message || "Sign In failed";
@@ -155,6 +173,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.initialized = true;
         state.loading = false;
+        localStorage.setItem("cachedUser", JSON.stringify(action.payload.user));
       })
       .addCase(register.rejected, (state, action) => {
         state.error = action.payload?.message || "Register failed";
@@ -192,15 +211,22 @@ const authSlice = createSlice({
         if (action.payload.success && action.payload.user) {
           state.isAuthenticated = true;
           state.user = action.payload.user;
+          localStorage.setItem(
+            "cachedUser",
+            JSON.stringify(action.payload.user)
+          );
         } else {
           state.isAuthenticated = false;
           state.user = null;
+          localStorage.removeItem("cachedUser");
         }
       })
       .addCase(getCurrentUser.rejected, state => {
         state.loading = false;
         state.initialized = true;
         state.isAuthenticated = false;
+        state.user = null;
+        localStorage.removeItem("cachedUser");
       });
     // Initialize Auth
     builder
