@@ -70,10 +70,13 @@ const refreshAccessTokenCookie = (
     expiresIn: `${accessTokenExpiryMinutes}m`
   });
 
+  // Use "lax" in development for consistency with setAuthCookies
+  const sameSite = process.env.NODE_ENV === "production" ? "strict" : "lax";
+
   res.cookie("accessToken", newAccessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite,
     maxAge: accessTokenExpiryMinutes * 60 * 1000
   });
 };
@@ -83,43 +86,49 @@ export const authenticate: RequestHandler = asyncHandler(
     const accessToken = req.cookies?.accessToken;
     const refreshToken = req.cookies?.refreshToken;
 
-    if (!accessToken || !refreshToken) {
+    if (!refreshToken) {
       clearAuthCookies(res);
       throw new AuthenticationError("Authentication required");
     }
 
-    const decoded = verifyAccessToken(accessToken);
+    // If access token exists and is valid, use it
+    if (accessToken) {
+      const decoded = verifyAccessToken(accessToken);
 
-    if (decoded) {
-      const user = await validateUser(decoded.userId);
-      const sessionId =
-        (await findSessionByRefreshToken(user.id, refreshToken)) || "";
+      if (decoded) {
+        const user = await validateUser(decoded.userId);
+        const sessionId =
+          (await findSessionByRefreshToken(user.id, refreshToken)) || "";
 
-      setAuthContext(req, decoded.userId, sessionId);
-      return next();
+        setAuthContext(req, decoded.userId, sessionId);
+        return next();
+      }
     }
 
     const refreshDecoded = verifyRefreshToken(refreshToken);
+
     if (!refreshDecoded) {
       clearAuthCookies(res);
       throw new AuthenticationError("Invalid refresh token");
     }
 
     const user = await validateUser(refreshDecoded.userId);
+
     if (user.refreshTokenVersion !== refreshDecoded.tokenVersion) {
       clearAuthCookies(res);
       throw new AuthenticationError("Invalid session");
     }
 
-    // Generate and set new access token
-    refreshAccessTokenCookie(res, user.publicId);
-
     // Find matching session
     const sessionId = await findSessionByRefreshToken(user.id, refreshToken);
+
     if (!sessionId) {
       clearAuthCookies(res);
       throw new AuthenticationError("Session not found");
     }
+
+    // Generate and set new access token
+    refreshAccessTokenCookie(res, user.publicId);
 
     setAuthContext(req, user.publicId, sessionId);
     return next();

@@ -4,7 +4,8 @@ import {
   DataSource,
   EntityManager,
   FindManyOptions,
-  FindOneOptions
+  FindOneOptions,
+  MoreThan
 } from "typeorm";
 import { BaseRepository } from "./base.repository";
 
@@ -29,7 +30,8 @@ export class UserSessionRepository extends BaseRepository<UserSession> {
     const filter: FindOneOptions<UserSession> = {
       where: {
         id: sessionId,
-        revoked: false
+        revoked: false,
+        expiresAt: MoreThan(new Date())
       },
       relations: { user: true }
     };
@@ -40,7 +42,8 @@ export class UserSessionRepository extends BaseRepository<UserSession> {
     const filter: FindManyOptions<UserSession> = {
       where: {
         user: { id: userId },
-        revoked: false
+        revoked: false,
+        expiresAt: MoreThan(new Date())
       }
     };
     return this.findAll(filter);
