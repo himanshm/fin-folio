@@ -45,7 +45,7 @@
 }
 
 :root {
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+  --font-sans: "Inter", -apple-system, system-ui, BlinkMacSystemFont,
     "SF Pro Text", "SF Pro Display", sans-serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
