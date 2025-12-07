@@ -9,7 +9,11 @@ interface RouteGuardProps {
 const RouteGuard = ({ requiredAuth, redirectTo }: RouteGuardProps) => {
   const { isAuthenticated, initialized } = useAuth();
 
-  if (!initialized) {
+  // Allow rendering if:
+  // 1. Auth is fully initialized, OR
+  // 2. User is authenticated (from cached user) even if still initializing
+  // This prevents blank page flash when cachedUser exists but initialization is pending
+  if (!initialized && !isAuthenticated) {
     return null;
   }
 
