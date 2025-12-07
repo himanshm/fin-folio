@@ -1,5 +1,5 @@
 import type { AxiosError, AxiosInstance } from "axios";
-import { AUTH_ENDPOINTS } from "./api.routes";
+import { AUTH_ENDPOINTS, isAuthEndpoint } from "./api.routes";
 import apiClient from "./client";
 import { getBaseUrl } from "./utils";
 
@@ -40,18 +40,12 @@ export const setupAuthInterceptor = (client: AxiosInstance): void => {
         return Promise.reject(error);
       }
 
-      // Special handling for current-user endpoint (initial session check)
-      // Let it fail silently so the app can show login page without errors
-      if (
-        originalRequest.url?.includes(AUTH_ENDPOINTS.CURRENT_USER) &&
-        !isRefreshing
-      ) {
-        return Promise.reject(error);
-      }
-
-      // Don't retry refresh endpoint itself
-      if (originalRequest.url?.includes(AUTH_ENDPOINTS.REFRESH)) {
-        redirectToLogin();
+      // Don't retry auth endpoints (login, register, etc.) - if they fail, it's not a token issue
+      if (originalRequest.url && isAuthEndpoint(originalRequest.url)) {
+        // Only redirect to login for refresh endpoint failures
+        if (originalRequest.url.includes(AUTH_ENDPOINTS.REFRESH)) {
+          redirectToLogin();
+        }
         return Promise.reject(error);
       }
 
