@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
   username: config.postgres.username,
   password: config.postgres.password,
   database: config.postgres.database,
-  synchronize: true,
+  synchronize: process.env.NODE_ENV === "development", // migrations for production
   logging: true,
   logger: new PinoTypeOrmLogger(),
   maxQueryExecutionTime: 1000,
