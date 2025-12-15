@@ -6,6 +6,7 @@ import { Budget } from "./models/Budget";
 import { BudgetItem } from "./models/BudgetItem";
 import { Category } from "./models/Category";
 import { Investment } from "./models/Investment";
+import { PasswordResetToken } from "./models/PasswordResetToken";
 import { Transaction } from "./models/Transaction";
 import { User } from "./models/User";
 import { UserSession } from "./models/UserSession";
@@ -28,7 +29,8 @@ export const AppDataSource = new DataSource({
     BudgetItem,
     Category,
     UserSession,
-    Investment
+    Investment,
+    PasswordResetToken
   ],
   migrations: [],
   subscribers: []
